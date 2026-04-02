@@ -388,6 +388,16 @@
                 </div>
             </div>
 
+            <!-- AI 모델 선택 -->
+                <div class="input-group">
+                    <label for="aiModel">생성 모델</label>
+                    <select id="aiModel" class="prompt-input">
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash Preview Image</option>
+                        <option value="gemini-3.0-pro">Gemini 3 Pro Image</option>
+                        <option value="gemini-3.1-flash">Gemini 3.1 Flash Image</option>
+                        <option value="imagen-3.0-generate-001">Imagen 3.0 Generate 001</option>
+                    </select>
+                </div>
             <!-- 브랜드 & 기업 -->
             <div class="category-block form-panel">
                 <div class="section-title">B. 브랜드 / 기업명</div>
@@ -430,7 +440,9 @@
                         <option value="traditional and classic">Traditional (전통적인)</option>
                         <option value="futuristic and high-tech">Futuristic (미래지향적인)</option>
                         <option value="clean and minimalistic">Minimalistic (미니멀한)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="brandToneOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
             </div>
 
@@ -452,7 +464,9 @@
                         <option value="ethereal and dreamy">Ethereal (몽환적인)</option>
                         <option value="nostalgic and retro vibe">Nostalgic (레트로/향수)</option>
                         <option value="cyberpunk neon atmosphere">Cyberpunk (사이버펑크)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="moodOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
                 <div class="input-group">
                     <label for="audienceLevel">직급 (Audience Level)</label>
@@ -465,7 +479,9 @@
                         <option value="appealing to the general public">General Public (대중/고객)</option>
                         <option value="appealing to investors and shareholders">Investors (투자자)</option>
                         <option value="appealing to technical experts">Technical Experts (기술전문가)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="audienceLevelOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
                 <div class="input-group">
                     <label for="audienceContext">맥락 (Audience Context)</label>
@@ -479,7 +495,9 @@
                         <option value="for investor relations meeting">Investor Relations (IR)</option>
                         <option value="for a product launch event">Product Launch (신제품출시)</option>
                         <option value="for a brainstorming workshop">Brainstorming Workshop (워크샵)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="audienceContextOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
             </div>
 
@@ -503,7 +521,9 @@
                         <option value="vibrant retro pop-art style">Pop Art (팝아트)</option>
                         <option value="low poly 3d artistic style">Low Poly 3D (로우폴리 3D)</option>
                         <option value="cute lovely claymation stop motion style">Claymation (클레이 아트)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="styleOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
                 <div class="input-group">
                     <label for="subject">주제 / 소재</label>
@@ -522,7 +542,9 @@
                         <option value="two people giving a professional handshake">Handshake (악수)</option>
                         <option value="an arrow hitting the center of a red target">Target/Arrow (과녁/화살)</option>
                         <option value="a bright magnifying glass over data">Magnifying Glass (돋보기/데이터)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="subjectOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
             </div>
 
@@ -540,7 +562,9 @@
                         <option value="subjects positioned at the top, empty space below">Bottom Empty (하단 여백)</option>
                         <option value="subjects completely framed by wide borders">Frame Margin (테두리 여백)</option>
                         <option value="diagonal composition leaving negative space on corner">Diagonal Empty (대각선 분할 여백)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="negativeSpaceOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
                 <div class="input-group">
                     <label for="aspectRatio">비율 (Aspect Ratio)</label>
@@ -566,7 +590,9 @@
                         <option value="vivid triadic color palette">Triadic Colors (3원색 대비)</option>
                         <option value="cinematic high contrast colors">High Contrast (고대비)</option>
                         <option value="soft muted color palette">Muted Colors (부드러운/채도낮은)</option>
+                                            <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="colorPaletteOther" class="prompt-input" placeholder="직접 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
                 <div class="input-group">
                     <label for="background">배경</label>
@@ -705,14 +731,14 @@
             return {
                 brandText: getVal('brandText').trim(),
                 industry: getVal('industry') === 'other' ? getVal('industryOther').trim() : getVal('industry'),
-                brandTone: getVal('brandTone'),
-                mood: getVal('mood'),
-                audienceLevel: getVal('audienceLevel'),
-                audienceContext: getVal('audienceContext'),
-                style: getVal('style'),
-                subject: getVal('subject'),
-                negativeSpace: getVal('negativeSpace'),
-                colorPalette: getVal('colorPalette'),
+                brandTone: getVal('brandTone') === 'other' ? getVal('brandToneOther').trim() : getVal('brandTone'),
+                mood: getVal('mood') === 'other' ? getVal('moodOther').trim() : getVal('mood'),
+                audienceLevel: getVal('audienceLevel') === 'other' ? getVal('audienceLevelOther').trim() : getVal('audienceLevel'),
+                audienceContext: getVal('audienceContext') === 'other' ? getVal('audienceContextOther').trim() : getVal('audienceContext'),
+                style: getVal('style') === 'other' ? getVal('styleOther').trim() : getVal('style'),
+                subject: getVal('subject') === 'other' ? getVal('subjectOther').trim() : getVal('subject'),
+                negativeSpace: getVal('negativeSpace') === 'other' ? getVal('negativeSpaceOther').trim() : getVal('negativeSpace'),
+                colorPalette: getVal('colorPalette') === 'other' ? getVal('colorPaletteOther').trim() : getVal('colorPalette'),
                 background: getVal('background') === 'other' ? getVal('backgroundOther').trim() : getVal('background'),
                 quality: getMulti('qualityGroup'),
                 negative: getMulti('negativeGroup'),
@@ -780,29 +806,26 @@
             input.addEventListener('input', updatePrompts);
         });
 
-        // Event listener for Industry 'Other' toggle
-        const industrySelect = document.getElementById('industry');
-        const industryOtherInput = document.getElementById('industryOther');
-        industrySelect.addEventListener('change', (e) => {
-            if (e.target.value === 'other') {
-                industryOtherInput.style.display = 'block';
-                industryOtherInput.focus();
-            } else {
-                industryOtherInput.style.display = 'none';
-                industryOtherInput.value = ''; // clear the hidden input
-            }
-        });
+        // Event listener for all 'Other' toggles
+        const otherFields = [
+            'industry', 'brandTone', 'mood', 'audienceLevel', 'audienceContext', 
+            'style', 'subject', 'negativeSpace', 'colorPalette', 'background'
+        ];
 
-        // Event listener for Background 'Other' toggle
-        const backgroundSelect = document.getElementById('background');
-        const backgroundOtherInput = document.getElementById('backgroundOther');
-        backgroundSelect.addEventListener('change', (e) => {
-            if (e.target.value === 'other') {
-                backgroundOtherInput.style.display = 'block';
-                backgroundOtherInput.focus();
-            } else {
-                backgroundOtherInput.style.display = 'none';
-                backgroundOtherInput.value = ''; // clear the hidden input
+        otherFields.forEach(field => {
+            const selectEl = document.getElementById(field);
+            const otherInput = document.getElementById(field + 'Other');
+            if(selectEl && otherInput) {
+                selectEl.addEventListener('change', (e) => {
+                    if (e.target.value === 'other') {
+                        otherInput.style.display = 'block';
+                        otherInput.focus();
+                    } else {
+                        otherInput.style.display = 'none';
+                        otherInput.value = ''; // clear the hidden input
+                        updatePrompts();
+                    }
+                });
             }
         });
 
@@ -843,29 +866,48 @@
             resultContainer.classList.remove('has-image');
             loadingSpinner.style.display = 'block';
 
-            // Use Google AI Studio Endpoint
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict`;
+            const aiModel = document.getElementById('aiModel').value || 'gemini-3.0-pro';
+            const isGemini = aiModel.includes('gemini');
             
-            const requestBody = {
-                instances: [
-                    { prompt: positivePrompt }
-                ],
-                parameters: {
-                    sampleCount: 1,
-                    aspectRatio: state.aspectRatio,
+            // Build endpoints and request body based on model type
+            let endpoint = '';
+            let requestBody = {};
+            
+            if (isGemini) {
+                endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${aiModel}:generateContent?key=${apiKey}`;
+                
+                let promptText = positivePrompt;
+                if (negativePrompt) promptText += "\nNegative prompt: " + negativePrompt;
+                
+                requestBody = {
+                    "contents": [{
+                        "parts": [{"text": promptText}]
+                    }],
+                    "generationConfig": {
+                        "responseModalities": ["IMAGE"]
+                    }
+                };
+            } else {
+                endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${aiModel}:predict?key=${apiKey}`;
+                
+                requestBody = {
+                    instances: [
+                        { prompt: positivePrompt }
+                    ],
+                    parameters: {
+                        sampleCount: 1,
+                        aspectRatio: state.aspectRatio,
+                    }
+                };
+                if (negativePrompt) {
+                    requestBody.parameters.negativePrompt = negativePrompt;
                 }
-            };
-
-            // 부정 프롬프트가 있을 때만 추가
-            if (negativePrompt) {
-                requestBody.parameters.negativePrompt = negativePrompt;
             }
 
             try {
                 const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: {
-                        'x-goog-api-key': apiKey,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(requestBody)
@@ -874,21 +916,30 @@
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
                     console.error("API Error details:", errorData);
-                    
-                    if (response.status === 400) throw new Error("프롬프트가 거절되었거나 형식이 잘못되었습니다.");
-                    if (response.status === 401 || response.status === 403) throw new Error("API Key가 유효하지 않거나 권한이 없습니다.");
-                    if (response.status === 429) throw new Error("요청 한도를 초과했습니다. 잠시 후 시도해주세요.");
-                    
-                    // 상세 에러가 있는 경우 추가
                     let detailMsg = errorData.error?.message ? ` - ${errorData.error.message}` : "";
                     throw new Error(`API 오류가 발생했습니다 (${response.status})${detailMsg}`);
                 }
 
                 const data = await response.json();
+                let base64Data = null;
+                let mimeType = 'image/jpeg';
                 
-                if (data.predictions && data.predictions.length > 0 && data.predictions[0].bytesBase64Encoded) {
-                    const base64Data = data.predictions[0].bytesBase64Encoded;
-                    const mimeType = data.predictions[0].mimeType || 'image/png';
+                if (isGemini) {
+                    // Extract from generateContent response geometry
+                    if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].inlineData) {
+                        const inline = data.candidates[0].content.parts[0].inlineData;
+                        base64Data = inline.data;
+                        mimeType = inline.mimeType;
+                    }
+                } else {
+                    // Extract from predict response
+                    if (data.predictions && data.predictions.length > 0 && data.predictions[0].bytesBase64Encoded) {
+                        base64Data = data.predictions[0].bytesBase64Encoded;
+                        mimeType = data.predictions[0].mimeType || 'image/png';
+                    }
+                }
+                
+                if (base64Data) {
                     const dataUrl = `data:${mimeType};base64,${base64Data}`;
                     
                     // Show Result Image
