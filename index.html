@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의안 커버 이미지 생성기</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --chip-bg: #f1f5f9;
+            --chip-selected: #bfdbfe;
+            --chip-selected-text: #1e3a8a;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Header & Settings */
+        .header {
+            grid-column: 1 / -1;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .settings-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        input[type="text"], input[type="password"] {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        /* Panels */
+        .panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Checklist Options */
+        .option-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .option-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            padding: 0.375rem 0.875rem;
+            background-color: var(--chip-bg);
+            border: 1px solid transparent;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .chip:hover {
+            background-color: #e2e8f0;
+        }
+
+        .chip.selected {
+            background-color: var(--chip-selected);
+            color: var(--chip-selected-text);
+            border-color: #93c5fd;
+            font-weight: 500;
+        }
+
+        /* Input specific layout */
+        .brand-input-container {
+            margin-bottom: 1rem;
+        }
+
+        /* Preview Display */
+        .preview-box {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            min-height: 100px;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            float: right;
+            margin-top: -0.5rem;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--chip-bg);
+        }
+
+        /* Action Area */
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+        }
+
+        .submit-btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Result Area */
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            background-color: #f1f5f9;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .result-image {
+            max-width: 100%;
+            height: auto;
+            display: none;
+        }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .loading-spinner {
+            display: none;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: var(--error-color);
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+            padding: 1rem;
+            background-color: #fef2f2;
+            border-radius: 0.5rem;
+            border: 1px solid #fecaca;
+        }
+
+        .result-actions {
+            display: none;
+            flex-direction: row;
+            gap: 1rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            background-color: white;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--chip-bg);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎨 강의안 커버 이미지 생성기</h1>
+            <p>체크리스트를 선택하여 Google Imagen API로 고품질 커버 이미지를 생성하세요.</p>
+        </div>
+
+        <div class="settings-card">
+            <div class="input-group">
+                <label for="projectId">Google Cloud Project ID</label>
+                <input type="text" id="projectId" placeholder="your-project-id" />
+            </div>
+            <div class="input-group">
+                <label for="apiKey">API Key (Bearer Token)</label>
+                <input type="password" id="apiKey" placeholder="ya29.a0Ael9sE..." />
+            </div>
+        </div>
+
+        <!-- Left Panel: Inputs -->
+        <div class="panel">
+            
+            <div class="card">
+                <h2>B. 브랜드 / 기업명</h2>
+                <div class="brand-input-container">
+                    <input type="text" id="brandText" placeholder="기업명 자유 입력 (예: Samsung)" />
+                </div>
+                <div class="option-group">
+                    <div class="option-title">산업군 (단일)</div>
+                    <div class="chip-container" data-group="industry" data-type="single">
+                        <div class="chip" data-value="tech corporate environment">Tech</div>
+                        <div class="chip" data-value="financial corporate environment">Finance</div>
+                        <div class="chip" data-value="healthcare environment">Healthcare</div>
+                        <div class="chip" data-value="educational environment">Education</div>
+                        <div class="chip" data-value="manufacturing facility">Manufacturing</div>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <div class="option-title">브랜드 톤 (단일)</div>
+                    <div class="chip-container" data-group="brandTone" data-type="single">
+                        <div class="chip" data-value="innovative and modern">Innovative</div>
+                        <div class="chip" data-value="trustworthy and professional">Trustworthy</div>
+                        <div class="chip" data-value="friendly and accessible">Friendly</div>
+                        <div class="chip" data-value="premium and luxurious">Premium</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>M. 분위기 (Mood)</h2>
+                <div class="option-group">
+                    <div class="chip-container" data-group="mood" data-type="single">
+                        <div class="chip" data-value="bright and energetic atmosphere">Bright</div>
+                        <div class="chip" data-value="calm and focused atmosphere">Calm</div>
+                        <div class="chip" data-value="dramatic and intense lighting">Dramatic</div>
+                        <div class="chip" data-value="warm and inviting feel">Warm</div>
+                        <div class="chip" data-value="cool and sharp feel">Cool</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>T. 타겟 청중</h2>
+                <div class="option-group">
+                    <div class="option-title">직급 (단일)</div>
+                    <div class="chip-container" data-group="audienceLevel" data-type="single">
+                        <div class="chip" data-value="appealing to executives (C-level)">Executives</div>
+                        <div class="chip" data-value="appealing to middle management">Managers</div>
+                        <div class="chip" data-value="appealing to general employees">Employees</div>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <div class="option-title">맥락 (단일)</div>
+                    <div class="chip-container" data-group="audienceContext" data-type="single">
+                        <div class="chip" data-value="for an annual strategy meeting">Strategy Meeting</div>
+                        <div class="chip" data-value="for an internal training session">Training</div>
+                        <div class="chip" data-value="for a client pitch presentation">Client Pitch</div>
+                        <div class="chip" data-value="for a public conference">Public Conference</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>1. 렌더링 스타일</h2>
+                <div class="option-group">
+                    <div class="chip-container" data-group="style" data-type="single">
+                        <div class="chip" data-value="ultra-realistic 3d render, octane render, unrtreal engine 5 style">3D Realistic</div>
+                        <div class="chip" data-value="flat vector illustration, clean lines, corporate memphis style">Flat Vector</div>
+                        <div class="chip" data-value="isometric 3d illustration, clean background">Isometric</div>
+                        <div class="chip" data-value="high quality photographic photography, depth of field">Photographic</div>
+                        <div class="chip" data-value="minimalist line art, elegant">Minimalist</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. 구도 & 여백</h2>
+                <div class="option-group">
+                    <div class="option-title">여백 위치 (단일)</div>
+                    <div class="chip-container" data-group="negativeSpace" data-type="single">
+                        <div class="chip" data-value="ample negative space on the left side for text">Left Empty</div>
+                        <div class="chip" data-value="ample negative space on the right side for text">Right Empty</div>
+                        <div class="chip" data-value="ample negative space at the center for text">Center Empty</div>
+                        <div class="chip" data-value="subjects positioned at the bottom, empty sky/space above">Top Empty</div>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <div class="option-title">비율 (API Parameter)</div>
+                    <div class="chip-container" data-group="aspectRatio" data-type="single">
+                        <div class="chip selected" data-value="16:9">16:9 (기본)</div>
+                        <div class="chip" data-value="4:3">4:3</div>
+                        <div class="chip" data-value="1:1">1:1</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Panel: Inputs Continued & Result -->
+        <div class="panel">
+            
+            <div class="card">
+                <h2>3. 주제 / 소재</h2>
+                 <div class="option-group">
+                    <div class="chip-container" data-group="subject" data-type="single">
+                        <div class="chip" data-value="abstract geometric shapes floating">Abstract Shapes</div>
+                        <div class="chip" data-value="a modern glass office building exterior">Office Building</div>
+                        <div class="chip" data-value="diverse business people collaborating at a table">People Collaborating</div>
+                        <div class="chip" data-value="growing glowing charts and upward arrows">Growth Charts</div>
+                        <div class="chip" data-value="futuristic glowing network nodes and data streams">Data Network</div>
+                        <div class="chip" data-value="a single growing plant in hands">Growth/Nature</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>4. 색상 팔레트</h2>
+                <div class="option-group">
+                    <div class="option-title">팔레트 (단일)</div>
+                    <div class="chip-container" data-group="colorPalette" data-type="single">
+                        <div class="chip" data-value="vibrant color palette">Vibrant</div>
+                        <div class="chip" data-value="monochromatic blue color palette">Monochromatic Blue</div>
+                        <div class="chip" data-value="pastel color palette">Pastel</div>
+                        <div class="chip" data-value="high contrast, neon cyber colors">Neon/Cyber</div>
+                        <div class="chip" data-value="earth tone color palette">Earth Tones</div>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <div class="option-title">배경 (단일)</div>
+                    <div class="chip-container" data-group="background" data-type="single">
+                        <div class="chip" data-value="on a pure white background">White Background</div>
+                        <div class="chip" data-value="on a dark gradient background">Dark Gradient</div>
+                        <div class="chip" data-value="on a soft glowing studio background">Studio Glow</div>
+                        <div class="chip" data-value="with abstract blurred lights background (bokeh)">Bokeh Background</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>5. 퀄리티 지시어</h2>
+                <div class="option-group">
+                    <div class="chip-container" data-group="quality" data-type="multi">
+                        <!-- 고정값은 JS에서 처리되므로 UI에는 참고용으로만 표시하거나 숨김, 여기선 선택 항목만 -->
+                        <div class="chip" data-value="masterpiece">Masterpiece</div>
+                        <div class="chip" data-value="highly detailed">Highly Detailed</div>
+                        <div class="chip" data-value="8k resolution">8K</div>
+                        <div class="chip" data-value="cinematic lighting">Cinematic Lighting</div>
+                        <div class="chip" data-value="sharp focus">Sharp Focus</div>
+                    </div>
+                </div>
+                <div class="option-title" style="margin-top:0.5rem; font-weight:normal; font-size:0.75rem;">* "no text, no watermark" 는 항상 포함됩니다.</div>
+            </div>
+
+            <div class="card">
+                <h2>6. 부정 프롬프트 (Negative)</h2>
+                <div class="option-group">
+                    <div class="chip-container" data-group="negative" data-type="multi">
+                        <div class="chip" data-value="messy, cluttered">Messy/Cluttered</div>
+                        <div class="chip" data-value="low res, pixelated">Low Res</div>
+                        <div class="chip" data-value="human faces">Human Faces</div> <!-- 얼굴 일그러짐 방지 목적 등으로 -->
+                        <div class="chip" data-value="dark, gloomy">Dark/Gloomy</div>
+                        <div class="chip" data-value="distracting background">Distracting BG</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Area -->
+            <div class="card action-area">
+                <h2>프롬프트 생성 및 실행</h2>
+                
+                <div class="option-title">
+                    최종 프롬프트 미리보기
+                    <button class="copy-btn" id="copyPromptBtn">복사</button>
+                </div>
+                <div class="preview-box" id="promptPreview">항목을 선택하면 프롬프트가 생성됩니다.</div>
+                
+                <div class="option-title">최종 부정 프롬프트 (설정 파라미터)</div>
+                <div class="preview-box" id="negativePreview" style="min-height: 40px; margin-bottom:0;">없음</div>
+
+                <button id="submitBtn" class="submit-btn" disabled>이미지 생성하기</button>
+
+                <div id="errorBox" class="error-message">에러 메시지</div>
+
+                <div class="result-container" id="resultContainer">
+                    <div class="placeholder-text" id="resultPlaceholder">
+                        API 연동 설정 후 생성하기 버튼을 눌러주세요.<br>
+                        (스타일 또는 주제 중 최소 1개 이상 선택 필요)
+                    </div>
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                    <img id="resultImage" class="result-image" alt="Generated Cover Image" />
+                </div>
+                
+                <div class="result-actions" id="resultActions">
+                    <a id="downloadBtn" download="cover-image.png" class="action-btn">이미지 다운로드</a>
+                    <button id="retryBtn" class="action-btn">재생성</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        const state = {
+            brandText: '',
+            industry: null,
+            brandTone: null,
+            mood: null,
+            audienceLevel: null,
+            audienceContext: null,
+            style: null,
+            subject: null,
+            negativeSpace: null,
+            aspectRatio: '16:9', // 기본값
+            colorPalette: null,
+            background: null,
+            quality: [],
+            negative: [],
+        };
+
+        const FIXED_QUALITY = "no text, no watermark";
+
+        // DOM Elements
+        const chips = document.querySelectorAll('.chip');
+        const brandInput = document.getElementById('brandText');
+        const promptPreview = document.getElementById('promptPreview');
+        const negativePreview = document.getElementById('negativePreview');
+        const submitBtn = document.getElementById('submitBtn');
+        const copyPromptBtn = document.getElementById('copyPromptBtn');
+        
+        const projectIdInput = document.getElementById('projectId');
+        const apiKeyInput = document.getElementById('apiKey');
+        
+        const resultContainer = document.getElementById('resultContainer');
+        const resultPlaceholder = document.getElementById('resultPlaceholder');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const resultImage = document.getElementById('resultImage');
+        const errorBox = document.getElementById('errorBox');
+        const resultActions = document.getElementById('resultActions');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const retryBtn = document.getElementById('retryBtn');
+
+        // Event Listeners for Chips
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const group = chip.parentElement.dataset.group;
+                const type = chip.parentElement.dataset.type;
+                const value = chip.dataset.value;
+
+                if (type === 'single') {
+                    // 단일 선택 처리
+                    if (chip.classList.contains('selected')) {
+                        // 이미 선택된 거 누르면 해제 (비율 제외)
+                        if (group !== 'aspectRatio') {
+                            chip.classList.remove('selected');
+                            state[group] = null;
+                        }
+                    } else {
+                        // 같은 그룹 내 다른 칩 선택 해제
+                        const siblings = chip.parentElement.querySelectorAll('.chip');
+                        siblings.forEach(s => s.classList.remove('selected'));
+                        chip.classList.add('selected');
+                        state[group] = value;
+                    }
+                } else if (type === 'multi') {
+                    // 다중 선택 처리
+                    if (chip.classList.contains('selected')) {
+                        chip.classList.remove('selected');
+                        state[group] = state[group].filter(v => v !== value);
+                    } else {
+                        chip.classList.add('selected');
+                        state[group].push(value);
+                    }
+                }
+
+                updatePrompts();
+            });
+        });
+
+        // Event Listener for Brand Text Input
+        brandInput.addEventListener('input', (e) => {
+            state.brandText = e.target.value.trim();
+            updatePrompts();
+        });
+
+        // Build Positive Prompt
+        function buildPositivePrompt() {
+            const parts = [];
+
+            // [브랜드명 "for {기업명}"] 
+            if (state.brandText) {
+                parts.push(`for ${state.brandText}`);
+            }
+            
+            // + [산업군] + [브랜드톤] 
+            if (state.industry) parts.push(state.industry);
+            if (state.brandTone) parts.push(state.brandTone);
+
+            // + [분위기] 
+            if (state.mood) parts.push(state.mood);
+
+            // + [청중 직급] + [청중 맥락] 
+            if (state.audienceLevel) parts.push(state.audienceLevel);
+            if (state.audienceContext) parts.push(state.audienceContext);
+
+            // + [렌더링 스타일] 
+            if (state.style) parts.push(state.style);
+
+            // + ["of " + 주제] 
+            if (state.subject) parts.push(`of ${state.subject}`);
+
+            // + [여백 위치] 
+            if (state.negativeSpace) parts.push(state.negativeSpace);
+
+            // + [색상 팔레트] + [배경] 
+            if (state.colorPalette) parts.push(state.colorPalette);
+            if (state.background) parts.push(state.background);
+
+            // + [퀄리티 지시어 (쉼표 연결)] + "no text, no watermark" (고정)
+            const qualityItems = [...state.quality];
+            qualityItems.push(FIXED_QUALITY);
+            parts.push(qualityItems.join(', '));
+
+            return parts.join(', ');
+        }
+
+        // Build Negative Prompt (for UI, API uses it as separate parameter)
+        // Note: The spec says "+ [부정 프롬프트 "avoid: " + 항목들]" in the combination logic, 
+        // but also specifies it as `negativePrompt` parameter in JSON. We will provide it as parameter.
+        function getNegativePromptString() {
+            if (state.negative.length === 0) return "";
+            return state.negative.join(', ');
+        }
+
+        // Update UI and Button State
+        function updatePrompts() {
+            const positive = buildPositivePrompt();
+            const negative = getNegativePromptString();
+
+            promptPreview.textContent = positive || "항목을 선택하면 프롬프트가 생성됩니다.";
+            negativePreview.textContent = negative || "없음";
+
+            // Submit Button 활성 조건: 스타일 또는 주제 중 최소 1개 이상 선택
+            if (state.style || state.subject) {
+                if (submitBtn.dataset.loading !== 'true') {
+                    submitBtn.disabled = false;
+                }
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Copy Prompt
+        copyPromptBtn.addEventListener('click', () => {
+            const textToCopy = buildPositivePrompt();
+            if (textToCopy) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalText = copyPromptBtn.textContent;
+                    copyPromptBtn.textContent = '복사됨!';
+                    setTimeout(() => copyPromptBtn.textContent = originalText, 2000);
+                });
+            }
+        });
+
+        // API Call Logic
+        async function generateImage() {
+            const projectId = projectIdInput.value.trim();
+            const apiKey = apiKeyInput.value.trim();
+            const positivePrompt = buildPositivePrompt();
+            const negativePrompt = getNegativePromptString();
+
+            if (!projectId || !apiKey) {
+                showError("API 키와 Project ID를 상단 설정에 입력해주세요.");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Set Loading UI
+            submitBtn.disabled = true;
+            submitBtn.dataset.loading = 'true';
+            submitBtn.textContent = "생성 중...";
+            resultPlaceholder.classList.add('hidden');
+            resultImage.style.display = 'none';
+            resultActions.style.display = 'none';
+            errorBox.style.display = 'none';
+            loadingSpinner.style.display = 'block';
+
+            const endpoint = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
+            
+            const requestBody = {
+                instances: [
+                    { prompt: positivePrompt }
+                ],
+                parameters: {
+                    sampleCount: 1,
+                    aspectRatio: state.aspectRatio,
+                }
+            };
+
+            // 부정 프롬프트가 있을 때만 추가
+            if (negativePrompt) {
+                requestBody.parameters.negativePrompt = negativePrompt;
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error("API Error details:", errorData);
+                    
+                    if (response.status === 400) throw new Error("프롬프트를 확인해주세요. 잘못된 요청입니다.");
+                    if (response.status === 401) throw new Error("API 키를 확인해주세요. 인증에 실패했습니다.");
+                    if (response.status === 429) throw new Error("잠시 후 다시 시도해주세요. 요청 한도를 초과했습니다.");
+                    throw new Error(`API 오류가 발생했습니다 (${response.status})`);
+                }
+
+                const data = await response.json();
+                
+                if (data.predictions && data.predictions.length > 0 && data.predictions[0].bytesBase64Encoded) {
+                    const base64Data = data.predictions[0].bytesBase64Encoded;
+                    const dataUrl = `data:image/png;base64,${base64Data}`;
+                    
+                    // Show Result Image
+                    resultImage.src = dataUrl;
+                    downloadBtn.href = dataUrl;
+                    
+                    loadingSpinner.style.display = 'none';
+                    resultImage.style.display = 'block';
+                    resultActions.style.display = 'flex';
+                } else {
+                    throw new Error("응답에서 이미지 데이터를 찾을 수 없습니다.");
+                }
+
+            } catch (error) {
+                console.error("Generation failed:", error);
+                showError(error.message || "네트워크 오류가 발생했습니다.");
+                loadingSpinner.style.display = 'none';
+                resultPlaceholder.classList.remove('hidden');
+            } finally {
+                // Reset Loading UI
+                submitBtn.dataset.loading = 'false';
+                submitBtn.textContent = "이미지 생성하기";
+                updatePrompts(); // 재평가하여 disable 상태 원복
+            }
+        }
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+        }
+
+        submitBtn.addEventListener('click', generateImage);
+        retryBtn.addEventListener('click', generateImage);
+
+    </script>
+</body>
+</html>
