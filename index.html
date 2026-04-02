@@ -385,6 +385,7 @@
                     <label for="apiKey">Google AI Studio API Key</label>
                     <input type="password" id="apiKey" placeholder="AIzaSy... (AI Studio에서 발급받은 키)" />
                     <span class="help-text">※ <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--primary-color);">Google AI Studio</a> 에서 발급받은 API Key를 입력하세요.</span>
+                    <span class="help-text" style="color:var(--error-color); margin-top: 5px;">※ <b>Baseline model quota reached</b> 오류 발생 시: 무료 할당량이 모두 소진된 것입니다. <a href="https://aistudio.google.com/app/billing" target="_blank" style="color:var(--error-color); text-decoration: underline;">결제 설정</a>에서 카드를 등록하고 Pay-as-you-go 플랜으로 전환하시면 계속 사용 가능합니다 (종량제 청구).</span>
                 </div>
             </div>
 
@@ -685,6 +686,7 @@
                 
                 <div class="result-actions" id="resultActions">
                     <a id="downloadBtn" download="cover-image.png" class="action-btn primary">컴퓨터에 저장</a>
+                    <button id="copyImageBtn" class="action-btn">이미지 복사</button>
                     <button id="retryBtn" class="action-btn">같은 설정으로 다시 생성</button>
                 </div>
             </div>
@@ -716,6 +718,7 @@
         const errorBox = document.getElementById('errorBox');
         const resultActions = document.getElementById('resultActions');
         const downloadBtn = document.getElementById('downloadBtn');
+        const copyImageBtn = document.getElementById('copyImageBtn');
         const retryBtn = document.getElementById('retryBtn');
 
         // State builder function
@@ -839,6 +842,23 @@
                     copyPromptBtn.textContent = '✔ 복사 완료!';
                     setTimeout(() => copyPromptBtn.textContent = originalText, 2000);
                 });
+            }
+        });
+
+        // Copy Image
+        copyImageBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch(resultImage.src);
+                const blob = await response.blob();
+                await navigator.clipboard.write([
+                    new ClipboardItem({ [blob.type]: blob })
+                ]);
+                const originalText = copyImageBtn.textContent;
+                copyImageBtn.textContent = '✔ 복사 완료!';
+                setTimeout(() => copyImageBtn.textContent = originalText, 2000);
+            } catch (err) {
+                console.error('이미지 복사 실패:', err);
+                alert('이미지 복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
             }
         });
 
