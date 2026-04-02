@@ -333,6 +333,31 @@
             background-color: #0f172a;
         }
 
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            background-color: #fff;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -557,7 +582,9 @@
                         <option value="with a starry night sky background">Starry Night (별이 빛나는 밤)</option>
                         <option value="with abstract fluid waves background">Abstract Fluid (추상적 유체 배경)</option>
                         <option value="on a solid color background">Solid Color (단색 배경)</option>
+                        <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="backgroundOther" class="prompt-input" placeholder="추가할 배경을 영어로 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
             </div>
 
@@ -565,32 +592,32 @@
             <div class="category-block form-panel">
                 <div class="section-title">5 & 6. 퀄리티 / 부정 프롬프트 (다중선택)</div>
                 <div class="input-group">
-                    <label for="quality">퀄리티 지시어 (Ctrl/Cmd 누르고 다중선택)</label>
-                    <select id="quality" class="prompt-input-multi" multiple size="4">
-                        <option value="masterpiece">Masterpiece (명작)</option>
-                        <option value="highly detailed">Highly Detailed (고해상도)</option>
-                        <option value="8k resolution">8K Resolution (8K)</option>
-                        <option value="cinematic lighting">Cinematic Lighting (영화같은 조명)</option>
-                        <option value="sharp focus">Sharp Focus (또렷한 초점)</option>
-                        <option value="global illumination, ray tracing">Ray Tracing (레이트레이싱)</option>
-                        <option value="award winning photography">Award Winning (수상작 급)</option>
-                        <option value="gorgeous volumetric lighting">Volumetric Lighting (빛 갈라짐 효과)</option>
-                    </select>
+                    <label>퀄리티 지시어</label>
+                    <div class="checkbox-group" id="qualityGroup">
+                        <label class="checkbox-label"><input type="checkbox" value="masterpiece" class="prompt-input-multi"> Masterpiece (명작)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="highly detailed" class="prompt-input-multi"> Highly Detailed (고해상도)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="8k resolution" class="prompt-input-multi"> 8K Resolution (8K)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="cinematic lighting" class="prompt-input-multi"> Cinematic Lighting (영화같은 조명)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="sharp focus" class="prompt-input-multi"> Sharp Focus (또렷한 초점)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="global illumination, ray tracing" class="prompt-input-multi"> Ray Tracing (레이트레이싱)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="award winning photography" class="prompt-input-multi"> Award Winning (수상작 급)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="gorgeous volumetric lighting" class="prompt-input-multi"> Volumetric Lighting (빛 갈라짐 효과)</label>
+                    </div>
                     <span class="help-text">※ "no text, no watermark" 는 항상 자동 포함됩니다.</span>
                 </div>
                 <div class="input-group">
-                    <label for="negative">부정 프롬프트 (피하고 싶은 요소)</label>
-                    <select id="negative" class="prompt-input-multi" multiple size="4">
-                        <option value="messy, cluttered">Messy/Cluttered (지저분함)</option>
-                        <option value="low res, pixelated">Low Res/Pixelated (저화질/픽셀깨짐)</option>
-                        <option value="human faces, bad anatomy">Human Faces (얼굴 일그러짐 방지)</option>
-                        <option value="dark, gloomy">Dark/Gloomy (우중충한)</option>
-                        <option value="distracting background">Distracting BG (시선 분산되는 배경)</option>
-                        <option value="deformed, ugly">Deformed (기형적인 형태)</option>
-                        <option value="blurry, out of focus">Blurry (흐릿함)</option>
-                        <option value="overexposed, blown out">Overexposed (과노출)</option>
-                        <option value="cartoonish, childish">Cartoonish (유치하고 만화같은)</option>
-                    </select>
+                    <label>부정 프롬프트 (피하고 싶은 요소)</label>
+                    <div class="checkbox-group" id="negativeGroup">
+                        <label class="checkbox-label"><input type="checkbox" value="messy, cluttered" class="prompt-input-multi"> Messy/Cluttered (지저분함)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="low res, pixelated" class="prompt-input-multi"> Low Res/Pixelated (저화질/픽셀깨짐)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="human faces, bad anatomy" class="prompt-input-multi"> Human Faces (얼굴 일그러짐 방지)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="dark, gloomy" class="prompt-input-multi"> Dark/Gloomy (우중충한)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="distracting background" class="prompt-input-multi"> Distracting BG (시선 분산되는 배경)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="deformed, ugly" class="prompt-input-multi"> Deformed (기형적인 형태)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="blurry, out of focus" class="prompt-input-multi"> Blurry (흐릿함)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="overexposed, blown out" class="prompt-input-multi"> Overexposed (과노출)</label>
+                        <label class="checkbox-label"><input type="checkbox" value="cartoonish, childish" class="prompt-input-multi"> Cartoonish (유치하고 만화같은)</label>
+                    </div>
                 </div>
             </div>
 
@@ -669,15 +696,10 @@
         function buildState() {
             const getVal = id => document.getElementById(id).value;
             
-            // Multiple select values helper
+            // Multiple checkbox values helper
             const getMulti = id => {
-                const selectElement = document.getElementById(id);
-                const result = [];
-                const options = selectElement && selectElement.options;
-                for (let i = 0; i < options.length; i++) {
-                    if (options[i].selected) result.push(options[i].value);
-                }
-                return result;
+                const checkboxes = document.querySelectorAll(`#${id} input:checked`);
+                return Array.from(checkboxes).map(cb => cb.value);
             };
 
             return {
@@ -691,9 +713,9 @@
                 subject: getVal('subject'),
                 negativeSpace: getVal('negativeSpace'),
                 colorPalette: getVal('colorPalette'),
-                background: getVal('background'),
-                quality: getMulti('quality'),
-                negative: getMulti('negative'),
+                background: getVal('background') === 'other' ? getVal('backgroundOther').trim() : getVal('background'),
+                quality: getMulti('qualityGroup'),
+                negative: getMulti('negativeGroup'),
                 aspectRatio: getVal('aspectRatio')
             };
         }
@@ -771,6 +793,19 @@
             }
         });
 
+        // Event listener for Background 'Other' toggle
+        const backgroundSelect = document.getElementById('background');
+        const backgroundOtherInput = document.getElementById('backgroundOther');
+        backgroundSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'other') {
+                backgroundOtherInput.style.display = 'block';
+                backgroundOtherInput.focus();
+            } else {
+                backgroundOtherInput.style.display = 'none';
+                backgroundOtherInput.value = ''; // clear the hidden input
+            }
+        });
+
         // Copy Prompt
         copyPromptBtn.addEventListener('click', () => {
             const state = buildState();
@@ -809,7 +844,7 @@
             loadingSpinner.style.display = 'block';
 
             // Use Google AI Studio Endpoint
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict`;
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict`;
             
             const requestBody = {
                 instances: [
