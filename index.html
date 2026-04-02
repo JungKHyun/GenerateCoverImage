@@ -13,9 +13,6 @@
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --chip-bg: #f1f5f9;
-            --chip-selected: #bfdbfe;
-            --chip-selected-text: #1e3a8a;
             --error-color: #ef4444;
         }
 
@@ -30,188 +27,194 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.5;
-            padding: 2rem 1rem;
+            height: 100vh;
+            overflow: hidden; /* 레이아웃 분리를 위해 */
         }
 
-        .container {
-            max-width: 1200px;
+        .layout-wrapper {
+            display: flex;
+            height: 100vh;
+            max-width: 1600px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
         }
 
-        @media (min-width: 768px) {
-            .container {
-                grid-template-columns: 1fr 1fr;
+        /* 왼쪽: 입력 사이드바 */
+        .sidebar {
+            width: 400px;
+            min-width: 350px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+            z-index: 10;
+        }
+
+        /* 오른쪽: 결과 콘텐츠 */
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background-color: #f1f5f9;
+        }
+
+        /* 반응형 (모바일 등 작은 화면에서는 상하 배치) */
+        @media (max-width: 900px) {
+            .layout-wrapper {
+                flex-direction: column;
+                overflow: auto;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+                overflow-y: visible;
+            }
+            .main-content {
+                width: 100%;
+                padding: 1.5rem;
+                overflow-y: visible;
+            }
+            body {
+                overflow: auto;
             }
         }
 
-        /* Header & Settings */
-        .header {
-            grid-column: 1 / -1;
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        
+        .header-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
             margin-bottom: 1rem;
         }
 
-        .header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
             color: var(--text-main);
-        }
-
-        .settings-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            grid-column: 1 / -1;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.375rem;
             margin-bottom: 1rem;
-        }
-        
-        .input-group:last-child {
-            margin-bottom: 0;
         }
 
         label {
             font-weight: 600;
             font-size: 0.875rem;
+            color: var(--text-main);
+        }
+        
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
-        input[type="text"], input[type="password"] {
-            padding: 0.5rem 0.75rem;
+        input[type="text"], input[type="password"], select {
+            padding: 0.625rem 0.75rem;
             border: 1px solid var(--border-color);
             border-radius: 0.375rem;
-            font-size: 1rem;
+            font-size: 0.9375rem;
             width: 100%;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+        
+        select {
+            cursor: pointer;
+            appearance: auto; /* 브라우저 기본 드롭다운 스타일 유지 */
         }
 
-        /* Panels */
-        .panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+        select[multiple] {
+            height: auto;
+            min-height: 100px;
         }
 
-        .card {
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .category-block {
+            background-color: var(--bg-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* 미리보기 영역 */
+        .preview-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 0.75rem;
             padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
-        h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        /* Checklist Options */
-        .option-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .option-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .option-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .chip-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .chip {
-            padding: 0.375rem 0.875rem;
-            background-color: var(--chip-bg);
-            border: 1px solid transparent;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            user-select: none;
-        }
-
-        .chip:hover {
-            background-color: #e2e8f0;
-        }
-
-        .chip.selected {
-            background-color: var(--chip-selected);
-            color: var(--chip-selected-text);
-            border-color: #93c5fd;
-            font-weight: 500;
-        }
-
-        /* Input specific layout */
-        .brand-input-container {
-            margin-bottom: 1rem;
-        }
-
-        /* Preview Display */
         .preview-box {
             background-color: #1e293b;
             color: #f8fafc;
             padding: 1rem;
             border-radius: 0.5rem;
-            font-family: monospace;
+            font-family: 'Consolas', monospace;
             font-size: 0.875rem;
-            min-height: 100px;
-            margin-bottom: 1rem;
+            min-height: 80px;
             white-space: pre-wrap;
             word-break: break-all;
+            margin-bottom: 0.5rem;
         }
 
         .copy-btn {
             background-color: transparent;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
             padding: 0.25rem 0.75rem;
             border-radius: 0.25rem;
             font-size: 0.75rem;
             cursor: pointer;
             float: right;
-            margin-top: -0.5rem;
+            transition: all 0.2s;
         }
 
         .copy-btn:hover {
-            background-color: var(--chip-bg);
+            background-color: var(--primary-color);
+            color: white;
         }
 
-        /* Action Area */
-        .action-area {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
+        /* 액션 영역 */
         .submit-btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 0.875rem 1.5rem;
+            padding: 1rem 1.5rem;
             border-radius: 0.5rem;
             font-size: 1.125rem;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s;
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .submit-btn:hover:not(:disabled) {
@@ -223,36 +226,57 @@
             cursor: not-allowed;
         }
 
-        /* Result Area */
+        /* 결과 영역 */
+        .result-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
         .result-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            flex: 1;
             min-height: 400px;
-            background-color: #f1f5f9;
+            background-color: #f8fafc;
             border-radius: 0.5rem;
+            border: 2px dashed #cbd5e1;
             overflow: hidden;
             position: relative;
-            margin-top: 1rem;
+        }
+
+        .result-container.has-image {
+            border: none;
+            background-color: transparent;
         }
 
         .result-image {
             max-width: 100%;
-            height: auto;
+            max-height: 100%;
+            object-fit: contain;
             display: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         .placeholder-text {
             color: var(--text-muted);
             text-align: center;
+            padding: 2rem;
         }
 
         .loading-spinner {
             display: none;
             border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border-left-color: var(--primary-color);
             animation: spin 1s linear infinite;
@@ -264,37 +288,49 @@
         }
 
         .error-message {
-            color: var(--error-color);
-            margin-top: 1rem;
-            text-align: center;
-            display: none;
-            padding: 1rem;
+            color: #b91c1c;
             background-color: #fef2f2;
-            border-radius: 0.5rem;
             border: 1px solid #fecaca;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+            font-size: 0.9375rem;
         }
 
         .result-actions {
             display: none;
             flex-direction: row;
             gap: 1rem;
-            margin-top: 1rem;
-            width: 100%;
+            margin-top: 1.5rem;
         }
 
         .action-btn {
             flex: 1;
-            padding: 0.75rem;
-            border-radius: 0.375rem;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
             border: 1px solid var(--border-color);
             background-color: white;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: all 0.2s;
         }
         
         .action-btn:hover {
-            background-color: var(--chip-bg);
+            background-color: #f1f5f9;
+        }
+        
+        .action-btn.primary {
+            background-color: var(--text-main);
+            color: white;
+            border-color: var(--text-main);
+        }
+        
+        .action-btn.primary:hover {
+            background-color: #0f172a;
         }
 
         .hidden {
@@ -304,250 +340,311 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>🎨 강의안 커버 이미지 생성기</h1>
-            <p>체크리스트를 선택하여 Google Imagen API로 고품질 커버 이미지를 생성하세요.</p>
-        </div>
-
-        <div class="settings-card">
-            <div class="input-group">
-                <label for="projectId">Google Cloud Project ID</label>
-                <input type="text" id="projectId" placeholder="your-project-id" />
+    <div class="layout-wrapper">
+        
+        <!-- ================= 왼쪽: 옵션 설정 사이드바 ================= -->
+        <aside class="sidebar">
+            <div class="header">
+                <h1>🎨 커버 이미지 생성기</h1>
+                <p class="header-desc">체크리스트를 선택하여 Google Imagen API로 고품질 커버 이미지를 생성하세요.</p>
             </div>
-            <div class="input-group">
-                <label for="apiKey">API Key (Bearer Token)</label>
-                <input type="password" id="apiKey" placeholder="ya29.a0Ael9sE..." />
-            </div>
-        </div>
 
-        <!-- Left Panel: Inputs -->
-        <div class="panel">
+            <!-- API 설정 -->
+            <div class="category-block">
+                <div class="section-title">API 설정</div>
+                <div class="input-group">
+                    <label for="projectId">Google Cloud Project ID</label>
+                    <input type="text" id="projectId" placeholder="예: gen-lang-client-xxxx" />
+                </div>
+                <div class="input-group">
+                    <label for="apiKey">API Key (Bearer Token)</label>
+                    <input type="password" id="apiKey" placeholder="ya29.a0Ael9sE... (OAuth 토큰)" />
+                    <span class="help-text">※ Vertex AI 엔드포인트는 일반적으로 OAuth 2.0 액세스 토큰(gcloud auth print-access-token)이 필요합니다.</span>
+                </div>
+            </div>
+
+            <!-- 브랜드 & 기업 -->
+            <div class="category-block form-panel">
+                <div class="section-title">B. 브랜드 / 기업명</div>
+                <div class="input-group">
+                    <label for="brandText">기업명</label>
+                    <input type="text" id="brandText" class="prompt-input" placeholder="자유 입력 (예: Samsung)" />
+                </div>
+                <div class="input-group">
+                    <label for="industry">산업군</label>
+                    <select id="industry" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="tech corporate environment">Tech (IT/기술)</option>
+                        <option value="financial corporate environment">Finance (금융)</option>
+                        <option value="healthcare environment">Healthcare (의료/헬스케어)</option>
+                        <option value="educational environment">Education (교육)</option>
+                        <option value="manufacturing facility">Manufacturing (제조)</option>
+                        <option value="retail and commerce environment">Retail (쇼핑/유통)</option>
+                        <option value="entertainment and media environment">Entertainment (엔터/미디어)</option>
+                        <option value="real estate and architecture">Real Estate (부동산/건축)</option>
+                        <option value="logistics and shipping environment">Logistics (물류/운송)</option>
+                        <option value="agricultural environment">Agriculture (농업)</option>
+                        <option value="energy and power plant environment">Energy (에너지)</option>
+                        <option value="telecommunications network center">Telecommunications (통신)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="brandTone">브랜드 톤</label>
+                    <select id="brandTone" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="innovative and modern">Innovative (혁신적인)</option>
+                        <option value="trustworthy and professional">Trustworthy (신뢰성 있는)</option>
+                        <option value="friendly and accessible">Friendly (친근한)</option>
+                        <option value="premium and luxurious">Premium (고급스러운)</option>
+                        <option value="playful and creative">Playful (창의적이고 활기찬)</option>
+                        <option value="serious and corporate">Serious (진지한)</option>
+                        <option value="eco-friendly and sustainable">Eco-friendly (친환경적인)</option>
+                        <option value="traditional and classic">Traditional (전통적인)</option>
+                        <option value="futuristic and high-tech">Futuristic (미래지향적인)</option>
+                        <option value="clean and minimalistic">Minimalistic (미니멀한)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 분위기 & 타겟 청중 -->
+            <div class="category-block form-panel">
+                <div class="section-title">M & T. 분위기 / 타겟 청중</div>
+                <div class="input-group">
+                    <label for="mood">분위기 (Mood)</label>
+                    <select id="mood" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="bright and energetic atmosphere">Bright & Energetic (밝고 활기찬)</option>
+                        <option value="calm and focused atmosphere">Calm & Focused (차분하고 집중된)</option>
+                        <option value="dramatic and intense lighting">Dramatic (드라마틱한)</option>
+                        <option value="warm and inviting feel">Warm (따뜻한)</option>
+                        <option value="cool and sharp feel">Cool & Sharp (차갑고 날카로운)</option>
+                        <option value="melancholic and deep atmosphere">Melancholic (감성적인/깊은)</option>
+                        <option value="mysterious and enigmatic">Mysterious (신비로운)</option>
+                        <option value="cinematic epic atmosphere">Cinematic (영화 같은 거대한)</option>
+                        <option value="ethereal and dreamy">Ethereal (몽환적인)</option>
+                        <option value="nostalgic and retro vibe">Nostalgic (레트로/향수)</option>
+                        <option value="cyberpunk neon atmosphere">Cyberpunk (사이버펑크)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="audienceLevel">직급 (Audience Level)</label>
+                    <select id="audienceLevel" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="appealing to executives (C-level)">Executives (임원진)</option>
+                        <option value="appealing to middle management">Managers (중간관리자)</option>
+                        <option value="appealing to general employees">Employees (일반직원)</option>
+                        <option value="appealing to interns and students">Interns/Students (인턴/학생)</option>
+                        <option value="appealing to the general public">General Public (대중/고객)</option>
+                        <option value="appealing to investors and shareholders">Investors (투자자)</option>
+                        <option value="appealing to technical experts">Technical Experts (기술전문가)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="audienceContext">맥락 (Audience Context)</label>
+                    <select id="audienceContext" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="for an annual strategy meeting">Strategy Meeting (전략회의)</option>
+                        <option value="for an internal training session">Training (내부교육)</option>
+                        <option value="for a client pitch presentation">Client Pitch (고객제안)</option>
+                        <option value="for a public conference">Public Conference (대외컨퍼런스)</option>
+                        <option value="for an internal townhall meeting">Internal Townhall (타운홀미팅)</option>
+                        <option value="for investor relations meeting">Investor Relations (IR)</option>
+                        <option value="for a product launch event">Product Launch (신제품출시)</option>
+                        <option value="for a brainstorming workshop">Brainstorming Workshop (워크샵)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 스타일 & 주제 -->
+            <div class="category-block form-panel">
+                <div class="section-title">1 & 3. 렌더링 스타일 / 주제</div>
+                <div class="input-group">
+                    <label for="style">렌더링 스타일</label>
+                    <select id="style" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="ultra-realistic 3d render, octane render, unreal engine 5 style">3D Realistic (언리얼/옥테인)</option>
+                        <option value="flat vector illustration, clean lines, corporate memphis style">Flat Vector (플랫 벡터)</option>
+                        <option value="isometric 3d illustration, clean background">Isometric (아이소메트릭)</option>
+                        <option value="high quality photographic photography, depth of field">Photographic (실사 사진)</option>
+                        <option value="minimalist line art, elegant">Minimalist (미니멀 라인아트)</option>
+                        <option value="beautiful expressive watercolor painting">Watercolor (수채화)</option>
+                        <option value="classic oil painting style, visible brush strokes">Oil Painting (유화)</option>
+                        <option value="detailed architectural sketch style">Sketch (스케치)</option>
+                        <option value="soft pencil drawing style">Pencil Drawing (연필 드로잉)</option>
+                        <option value="high quality anime style illustration">Anime Style (애니메이션풍)</option>
+                        <option value="vibrant retro pop-art style">Pop Art (팝아트)</option>
+                        <option value="low poly 3d artistic style">Low Poly 3D (로우폴리 3D)</option>
+                        <option value="cute lovely claymation stop motion style">Claymation (클레이 아트)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="subject">주제 / 소재</label>
+                    <select id="subject" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="abstract geometric shapes floating">Abstract Shapes (추상 도형)</option>
+                        <option value="a modern glass office building exterior">Office Building (오피스 빌딩)</option>
+                        <option value="diverse business people collaborating at a table">People Collaborating (협업하는 사람들)</option>
+                        <option value="growing glowing charts and upward arrows">Growth Charts (성장 차트)</option>
+                        <option value="futuristic glowing network nodes and data streams">Data Network (데이터 네트워크)</option>
+                        <option value="a single growing plant in hands">Growth/Nature (식물/손)</option>
+                        <option value="a glowing transparent globe of the world">Globe/World (지구본/세계)</option>
+                        <option value="a beautiful massive city skyline at sunset">City Skyline (도시 스카이라인)</option>
+                        <option value="a friendly futuristic android robot">Robot/AI (로봇/인공지능)</option>
+                        <option value="interlocking metallic puzzle pieces">Puzzle Pieces (퍼즐 조각)</option>
+                        <option value="two people giving a professional handshake">Handshake (악수)</option>
+                        <option value="an arrow hitting the center of a red target">Target/Arrow (과녁/화살)</option>
+                        <option value="a bright magnifying glass over data">Magnifying Glass (돋보기/데이터)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 구도 & 색상 -->
+            <div class="category-block form-panel">
+                <div class="section-title">2 & 4. 구도 / 배경 / 비율</div>
+                <div class="input-group">
+                    <label for="negativeSpace">여백 위치</label>
+                    <select id="negativeSpace" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="ample negative space on the left side for text">Left Empty (좌측 여백)</option>
+                        <option value="ample negative space on the right side for text">Right Empty (우측 여백)</option>
+                        <option value="ample negative space at the center for text">Center Empty (중앙 여백)</option>
+                        <option value="subjects positioned at the bottom, empty sky/space above">Top Empty (상단 여백)</option>
+                        <option value="subjects positioned at the top, empty space below">Bottom Empty (하단 여백)</option>
+                        <option value="subjects completely framed by wide borders">Frame Margin (테두리 여백)</option>
+                        <option value="diagonal composition leaving negative space on corner">Diagonal Empty (대각선 분할 여백)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="aspectRatio">비율 (Aspect Ratio)</label>
+                    <select id="aspectRatio">
+                        <option value="16:9" selected>16:9 (와이드 스크린)</option>
+                        <option value="4:3">4:3 (표준 모니터)</option>
+                        <option value="1:1">1:1 (정사각형)</option>
+                        <option value="9:16">9:16 (세로형 모바일)</option>
+                        <option value="3:4">3:4 (태블릿 세로)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="colorPalette">색상 팔레트</label>
+                    <select id="colorPalette" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="vibrant color palette">Vibrant (선명한 색상)</option>
+                        <option value="monochromatic blue color palette">Monochromatic Blue (파란색 단색조)</option>
+                        <option value="pastel color palette">Pastel (파스텔 톤)</option>
+                        <option value="high contrast, neon cyber colors">Neon/Cyber (네온/사이버펑크)</option>
+                        <option value="earth tone color palette">Earth Tones (어스 톤/자연색)</option>
+                        <option value="black and white grayscale photography">Black and White (흑백)</option>
+                        <option value="warm nostalgic sepia tone">Sepia (세피아)</option>
+                        <option value="vivid triadic color palette">Triadic Colors (3원색 대비)</option>
+                        <option value="cinematic high contrast colors">High Contrast (고대비)</option>
+                        <option value="soft muted color palette">Muted Colors (부드러운/채도낮은)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="background">배경</label>
+                    <select id="background" class="prompt-input">
+                        <option value="">선택 안함</option>
+                        <option value="on a pure white background">White Background (순백색 배경)</option>
+                        <option value="on a dark ambient gradient background">Dark Gradient (어두운 그라데이션)</option>
+                        <option value="on a soft glowing studio background">Studio Glow (부드러운 조명 스튜디오)</option>
+                        <option value="with abstract blurred lights background (bokeh)">Bokeh Background (보케/빛망울)</option>
+                        <option value="with a blurred glowing cityscape background">Cityscape Background (흐린 도시배경)</option>
+                        <option value="with a lush green nature background">Nature Background (자연 배경)</option>
+                        <option value="on a subtle sci-fi grid background">Grid Background (그리드 배경)</option>
+                        <option value="with a starry night sky background">Starry Night (별이 빛나는 밤)</option>
+                        <option value="with abstract fluid waves background">Abstract Fluid (추상적 유체 배경)</option>
+                        <option value="on a solid color background">Solid Color (단색 배경)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 디테일 설정 (다중선택) -->
+            <div class="category-block form-panel">
+                <div class="section-title">5 & 6. 퀄리티 / 부정 프롬프트 (다중선택)</div>
+                <div class="input-group">
+                    <label for="quality">퀄리티 지시어 (Ctrl/Cmd 누르고 다중선택)</label>
+                    <select id="quality" class="prompt-input-multi" multiple size="4">
+                        <option value="masterpiece">Masterpiece (명작)</option>
+                        <option value="highly detailed">Highly Detailed (고해상도)</option>
+                        <option value="8k resolution">8K Resolution (8K)</option>
+                        <option value="cinematic lighting">Cinematic Lighting (영화같은 조명)</option>
+                        <option value="sharp focus">Sharp Focus (또렷한 초점)</option>
+                        <option value="global illumination, ray tracing">Ray Tracing (레이트레이싱)</option>
+                        <option value="award winning photography">Award Winning (수상작 급)</option>
+                        <option value="gorgeous volumetric lighting">Volumetric Lighting (빛 갈라짐 효과)</option>
+                    </select>
+                    <span class="help-text">※ "no text, no watermark" 는 항상 자동 포함됩니다.</span>
+                </div>
+                <div class="input-group">
+                    <label for="negative">부정 프롬프트 (피하고 싶은 요소)</label>
+                    <select id="negative" class="prompt-input-multi" multiple size="4">
+                        <option value="messy, cluttered">Messy/Cluttered (지저분함)</option>
+                        <option value="low res, pixelated">Low Res/Pixelated (저화질/픽셀깨짐)</option>
+                        <option value="human faces, bad anatomy">Human Faces (얼굴 일그러짐 방지)</option>
+                        <option value="dark, gloomy">Dark/Gloomy (우중충한)</option>
+                        <option value="distracting background">Distracting BG (시선 분산되는 배경)</option>
+                        <option value="deformed, ugly">Deformed (기형적인 형태)</option>
+                        <option value="blurry, out of focus">Blurry (흐릿함)</option>
+                        <option value="overexposed, blown out">Overexposed (과노출)</option>
+                        <option value="cartoonish, childish">Cartoonish (유치하고 만화같은)</option>
+                    </select>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- ================= 오른쪽: 결과 영역 ================= -->
+        <main class="main-content">
             
-            <div class="card">
-                <h2>B. 브랜드 / 기업명</h2>
-                <div class="brand-input-container">
-                    <input type="text" id="brandText" placeholder="기업명 자유 입력 (예: Samsung)" />
+            <div class="preview-card">
+                <div class="section-title" style="border:none; margin-bottom: 0.5rem;">
+                    조합된 프롬프트 (Prompt)
+                    <button class="copy-btn" id="copyPromptBtn">내용 복사</button>
                 </div>
-                <div class="option-group">
-                    <div class="option-title">산업군 (단일)</div>
-                    <div class="chip-container" data-group="industry" data-type="single">
-                        <div class="chip" data-value="tech corporate environment">Tech</div>
-                        <div class="chip" data-value="financial corporate environment">Finance</div>
-                        <div class="chip" data-value="healthcare environment">Healthcare</div>
-                        <div class="chip" data-value="educational environment">Education</div>
-                        <div class="chip" data-value="manufacturing facility">Manufacturing</div>
-                    </div>
-                </div>
-                <div class="option-group">
-                    <div class="option-title">브랜드 톤 (단일)</div>
-                    <div class="chip-container" data-group="brandTone" data-type="single">
-                        <div class="chip" data-value="innovative and modern">Innovative</div>
-                        <div class="chip" data-value="trustworthy and professional">Trustworthy</div>
-                        <div class="chip" data-value="friendly and accessible">Friendly</div>
-                        <div class="chip" data-value="premium and luxurious">Premium</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>M. 분위기 (Mood)</h2>
-                <div class="option-group">
-                    <div class="chip-container" data-group="mood" data-type="single">
-                        <div class="chip" data-value="bright and energetic atmosphere">Bright</div>
-                        <div class="chip" data-value="calm and focused atmosphere">Calm</div>
-                        <div class="chip" data-value="dramatic and intense lighting">Dramatic</div>
-                        <div class="chip" data-value="warm and inviting feel">Warm</div>
-                        <div class="chip" data-value="cool and sharp feel">Cool</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>T. 타겟 청중</h2>
-                <div class="option-group">
-                    <div class="option-title">직급 (단일)</div>
-                    <div class="chip-container" data-group="audienceLevel" data-type="single">
-                        <div class="chip" data-value="appealing to executives (C-level)">Executives</div>
-                        <div class="chip" data-value="appealing to middle management">Managers</div>
-                        <div class="chip" data-value="appealing to general employees">Employees</div>
-                    </div>
-                </div>
-                <div class="option-group">
-                    <div class="option-title">맥락 (단일)</div>
-                    <div class="chip-container" data-group="audienceContext" data-type="single">
-                        <div class="chip" data-value="for an annual strategy meeting">Strategy Meeting</div>
-                        <div class="chip" data-value="for an internal training session">Training</div>
-                        <div class="chip" data-value="for a client pitch presentation">Client Pitch</div>
-                        <div class="chip" data-value="for a public conference">Public Conference</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>1. 렌더링 스타일</h2>
-                <div class="option-group">
-                    <div class="chip-container" data-group="style" data-type="single">
-                        <div class="chip" data-value="ultra-realistic 3d render, octane render, unrtreal engine 5 style">3D Realistic</div>
-                        <div class="chip" data-value="flat vector illustration, clean lines, corporate memphis style">Flat Vector</div>
-                        <div class="chip" data-value="isometric 3d illustration, clean background">Isometric</div>
-                        <div class="chip" data-value="high quality photographic photography, depth of field">Photographic</div>
-                        <div class="chip" data-value="minimalist line art, elegant">Minimalist</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>2. 구도 & 여백</h2>
-                <div class="option-group">
-                    <div class="option-title">여백 위치 (단일)</div>
-                    <div class="chip-container" data-group="negativeSpace" data-type="single">
-                        <div class="chip" data-value="ample negative space on the left side for text">Left Empty</div>
-                        <div class="chip" data-value="ample negative space on the right side for text">Right Empty</div>
-                        <div class="chip" data-value="ample negative space at the center for text">Center Empty</div>
-                        <div class="chip" data-value="subjects positioned at the bottom, empty sky/space above">Top Empty</div>
-                    </div>
-                </div>
-                <div class="option-group">
-                    <div class="option-title">비율 (API Parameter)</div>
-                    <div class="chip-container" data-group="aspectRatio" data-type="single">
-                        <div class="chip selected" data-value="16:9">16:9 (기본)</div>
-                        <div class="chip" data-value="4:3">4:3</div>
-                        <div class="chip" data-value="1:1">1:1</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Right Panel: Inputs Continued & Result -->
-        <div class="panel">
-            
-            <div class="card">
-                <h2>3. 주제 / 소재</h2>
-                 <div class="option-group">
-                    <div class="chip-container" data-group="subject" data-type="single">
-                        <div class="chip" data-value="abstract geometric shapes floating">Abstract Shapes</div>
-                        <div class="chip" data-value="a modern glass office building exterior">Office Building</div>
-                        <div class="chip" data-value="diverse business people collaborating at a table">People Collaborating</div>
-                        <div class="chip" data-value="growing glowing charts and upward arrows">Growth Charts</div>
-                        <div class="chip" data-value="futuristic glowing network nodes and data streams">Data Network</div>
-                        <div class="chip" data-value="a single growing plant in hands">Growth/Nature</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>4. 색상 팔레트</h2>
-                <div class="option-group">
-                    <div class="option-title">팔레트 (단일)</div>
-                    <div class="chip-container" data-group="colorPalette" data-type="single">
-                        <div class="chip" data-value="vibrant color palette">Vibrant</div>
-                        <div class="chip" data-value="monochromatic blue color palette">Monochromatic Blue</div>
-                        <div class="chip" data-value="pastel color palette">Pastel</div>
-                        <div class="chip" data-value="high contrast, neon cyber colors">Neon/Cyber</div>
-                        <div class="chip" data-value="earth tone color palette">Earth Tones</div>
-                    </div>
-                </div>
-                <div class="option-group">
-                    <div class="option-title">배경 (단일)</div>
-                    <div class="chip-container" data-group="background" data-type="single">
-                        <div class="chip" data-value="on a pure white background">White Background</div>
-                        <div class="chip" data-value="on a dark gradient background">Dark Gradient</div>
-                        <div class="chip" data-value="on a soft glowing studio background">Studio Glow</div>
-                        <div class="chip" data-value="with abstract blurred lights background (bokeh)">Bokeh Background</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>5. 퀄리티 지시어</h2>
-                <div class="option-group">
-                    <div class="chip-container" data-group="quality" data-type="multi">
-                        <!-- 고정값은 JS에서 처리되므로 UI에는 참고용으로만 표시하거나 숨김, 여기선 선택 항목만 -->
-                        <div class="chip" data-value="masterpiece">Masterpiece</div>
-                        <div class="chip" data-value="highly detailed">Highly Detailed</div>
-                        <div class="chip" data-value="8k resolution">8K</div>
-                        <div class="chip" data-value="cinematic lighting">Cinematic Lighting</div>
-                        <div class="chip" data-value="sharp focus">Sharp Focus</div>
-                    </div>
-                </div>
-                <div class="option-title" style="margin-top:0.5rem; font-weight:normal; font-size:0.75rem;">* "no text, no watermark" 는 항상 포함됩니다.</div>
-            </div>
-
-            <div class="card">
-                <h2>6. 부정 프롬프트 (Negative)</h2>
-                <div class="option-group">
-                    <div class="chip-container" data-group="negative" data-type="multi">
-                        <div class="chip" data-value="messy, cluttered">Messy/Cluttered</div>
-                        <div class="chip" data-value="low res, pixelated">Low Res</div>
-                        <div class="chip" data-value="human faces">Human Faces</div> <!-- 얼굴 일그러짐 방지 목적 등으로 -->
-                        <div class="chip" data-value="dark, gloomy">Dark/Gloomy</div>
-                        <div class="chip" data-value="distracting background">Distracting BG</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Area -->
-            <div class="card action-area">
-                <h2>프롬프트 생성 및 실행</h2>
+                <div class="preview-box" id="promptPreview">옵션을 선택하시면 이곳에 영문 최종 프롬프트가 나타납니다.</div>
                 
-                <div class="option-title">
-                    최종 프롬프트 미리보기
-                    <button class="copy-btn" id="copyPromptBtn">복사</button>
+                <div class="section-title" style="border:none; margin-bottom: 0.5rem; font-size: 1rem; margin-top: 1rem;">
+                    부정 프롬프트 (Negative Prompt)
                 </div>
-                <div class="preview-box" id="promptPreview">항목을 선택하면 프롬프트가 생성됩니다.</div>
+                <div class="preview-box" id="negativePreview" style="min-height: 40px;">없음</div>
                 
-                <div class="option-title">최종 부정 프롬프트 (설정 파라미터)</div>
-                <div class="preview-box" id="negativePreview" style="min-height: 40px; margin-bottom:0;">없음</div>
+                <button id="submitBtn" class="submit-btn" disabled>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    이미지 생성하기
+                </button>
+            </div>
 
-                <button id="submitBtn" class="submit-btn" disabled>이미지 생성하기</button>
+            <div id="errorBox" class="error-message"></div>
 
-                <div id="errorBox" class="error-message">에러 메시지</div>
-
+            <div class="result-card">
+                <div class="section-title">생성 결과</div>
                 <div class="result-container" id="resultContainer">
                     <div class="placeholder-text" id="resultPlaceholder">
-                        API 연동 설정 후 생성하기 버튼을 눌러주세요.<br>
-                        (스타일 또는 주제 중 최소 1개 이상 선택 필요)
+                        <h3>API 연동 후 생성 버튼을 눌러주세요.</h3>
+                        <p style="margin-top:0.5rem; font-size:0.875rem;">(렌더링 스타일 또는 주제/소재 중 1개 이상 선택 필수)</p>
                     </div>
                     <div class="loading-spinner" id="loadingSpinner"></div>
                     <img id="resultImage" class="result-image" alt="Generated Cover Image" />
                 </div>
                 
                 <div class="result-actions" id="resultActions">
-                    <a id="downloadBtn" download="cover-image.png" class="action-btn">이미지 다운로드</a>
-                    <button id="retryBtn" class="action-btn">재생성</button>
+                    <a id="downloadBtn" download="cover-image.png" class="action-btn primary">컴퓨터에 저장</a>
+                    <button id="retryBtn" class="action-btn">같은 설정으로 다시 생성</button>
                 </div>
-
             </div>
 
-        </div>
+        </main>
     </div>
 
     <script>
-        // State Management
-        const state = {
-            brandText: '',
-            industry: null,
-            brandTone: null,
-            mood: null,
-            audienceLevel: null,
-            audienceContext: null,
-            style: null,
-            subject: null,
-            negativeSpace: null,
-            aspectRatio: '16:9', // 기본값
-            colorPalette: null,
-            background: null,
-            quality: [],
-            negative: [],
-        };
-
         const FIXED_QUALITY = "no text, no watermark";
 
         // DOM Elements
-        const chips = document.querySelectorAll('.chip');
+        const promptInputs = document.querySelectorAll('.prompt-input');
+        const promptInputMulti = document.querySelectorAll('.prompt-input-multi');
         const brandInput = document.getElementById('brandText');
+        const aspectRatioSelect = document.getElementById('aspectRatio');
+        
         const promptPreview = document.getElementById('promptPreview');
         const negativePreview = document.getElementById('negativePreview');
         const submitBtn = document.getElementById('submitBtn');
@@ -565,83 +662,55 @@
         const downloadBtn = document.getElementById('downloadBtn');
         const retryBtn = document.getElementById('retryBtn');
 
-        // Event Listeners for Chips
-        chips.forEach(chip => {
-            chip.addEventListener('click', () => {
-                const group = chip.parentElement.dataset.group;
-                const type = chip.parentElement.dataset.type;
-                const value = chip.dataset.value;
-
-                if (type === 'single') {
-                    // 단일 선택 처리
-                    if (chip.classList.contains('selected')) {
-                        // 이미 선택된 거 누르면 해제 (비율 제외)
-                        if (group !== 'aspectRatio') {
-                            chip.classList.remove('selected');
-                            state[group] = null;
-                        }
-                    } else {
-                        // 같은 그룹 내 다른 칩 선택 해제
-                        const siblings = chip.parentElement.querySelectorAll('.chip');
-                        siblings.forEach(s => s.classList.remove('selected'));
-                        chip.classList.add('selected');
-                        state[group] = value;
-                    }
-                } else if (type === 'multi') {
-                    // 다중 선택 처리
-                    if (chip.classList.contains('selected')) {
-                        chip.classList.remove('selected');
-                        state[group] = state[group].filter(v => v !== value);
-                    } else {
-                        chip.classList.add('selected');
-                        state[group].push(value);
-                    }
+        // State builder function
+        function buildState() {
+            const getVal = id => document.getElementById(id).value;
+            
+            // Multiple select values helper
+            const getMulti = id => {
+                const selectElement = document.getElementById(id);
+                const result = [];
+                const options = selectElement && selectElement.options;
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].selected) result.push(options[i].value);
                 }
+                return result;
+            };
 
-                updatePrompts();
-            });
-        });
-
-        // Event Listener for Brand Text Input
-        brandInput.addEventListener('input', (e) => {
-            state.brandText = e.target.value.trim();
-            updatePrompts();
-        });
+            return {
+                brandText: getVal('brandText').trim(),
+                industry: getVal('industry'),
+                brandTone: getVal('brandTone'),
+                mood: getVal('mood'),
+                audienceLevel: getVal('audienceLevel'),
+                audienceContext: getVal('audienceContext'),
+                style: getVal('style'),
+                subject: getVal('subject'),
+                negativeSpace: getVal('negativeSpace'),
+                colorPalette: getVal('colorPalette'),
+                background: getVal('background'),
+                quality: getMulti('quality'),
+                negative: getMulti('negative'),
+                aspectRatio: getVal('aspectRatio')
+            };
+        }
 
         // Build Positive Prompt
-        function buildPositivePrompt() {
+        function buildPositivePrompt(state) {
             const parts = [];
 
-            // [브랜드명 "for {기업명}"] 
-            if (state.brandText) {
-                parts.push(`for ${state.brandText}`);
-            }
-            
-            // + [산업군] + [브랜드톤] 
+            if (state.brandText) parts.push(`for ${state.brandText}`);
             if (state.industry) parts.push(state.industry);
             if (state.brandTone) parts.push(state.brandTone);
-
-            // + [분위기] 
             if (state.mood) parts.push(state.mood);
-
-            // + [청중 직급] + [청중 맥락] 
             if (state.audienceLevel) parts.push(state.audienceLevel);
             if (state.audienceContext) parts.push(state.audienceContext);
-
-            // + [렌더링 스타일] 
             if (state.style) parts.push(state.style);
-
-            // + ["of " + 주제] 
             if (state.subject) parts.push(`of ${state.subject}`);
-
-            // + [여백 위치] 
             if (state.negativeSpace) parts.push(state.negativeSpace);
-
-            // + [색상 팔레트] + [배경] 
             if (state.colorPalette) parts.push(state.colorPalette);
             if (state.background) parts.push(state.background);
 
-            // + [퀄리티 지시어 (쉼표 연결)] + "no text, no watermark" (고정)
             const qualityItems = [...state.quality];
             qualityItems.push(FIXED_QUALITY);
             parts.push(qualityItems.join(', '));
@@ -649,20 +718,25 @@
             return parts.join(', ');
         }
 
-        // Build Negative Prompt (for UI, API uses it as separate parameter)
-        // Note: The spec says "+ [부정 프롬프트 "avoid: " + 항목들]" in the combination logic, 
-        // but also specifies it as `negativePrompt` parameter in JSON. We will provide it as parameter.
-        function getNegativePromptString() {
-            if (state.negative.length === 0) return "";
+        // Build Negative Prompt string
+        function getNegativePromptString(state) {
+            if (!state.negative || state.negative.length === 0) return "";
             return state.negative.join(', ');
         }
 
         // Update UI and Button State
         function updatePrompts() {
-            const positive = buildPositivePrompt();
-            const negative = getNegativePromptString();
+            const state = buildState();
+            const positive = buildPositivePrompt(state);
+            const negative = getNegativePromptString(state);
 
-            promptPreview.textContent = positive || "항목을 선택하면 프롬프트가 생성됩니다.";
+            // "for " 또는 quality 기본값만 있는 경우 (사용자 선택 없음)
+            const hasUserChoice = state.industry || state.brandTone || state.mood || 
+                                  state.audienceLevel || state.audienceContext || state.style || 
+                                  state.subject || state.negativeSpace || state.colorPalette || 
+                                  state.background || state.quality.length > 0 || state.brandText;
+
+            promptPreview.textContent = hasUserChoice ? positive : "옵션을 선택하시면 이곳에 영문 최종 프롬프트가 나타납니다.";
             negativePreview.textContent = negative || "없음";
 
             // Submit Button 활성 조건: 스타일 또는 주제 중 최소 1개 이상 선택
@@ -675,13 +749,20 @@
             }
         }
 
+        // Add event listeners to all inputs
+        [...promptInputs, ...promptInputMulti, brandInput, aspectRatioSelect].forEach(input => {
+            input.addEventListener('change', updatePrompts);
+            input.addEventListener('input', updatePrompts);
+        });
+
         // Copy Prompt
         copyPromptBtn.addEventListener('click', () => {
-            const textToCopy = buildPositivePrompt();
-            if (textToCopy) {
+            const state = buildState();
+            const textToCopy = buildPositivePrompt(state);
+            if (textToCopy && textToCopy !== "no text, no watermark") {
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     const originalText = copyPromptBtn.textContent;
-                    copyPromptBtn.textContent = '복사됨!';
+                    copyPromptBtn.textContent = '✔ 복사 완료!';
                     setTimeout(() => copyPromptBtn.textContent = originalText, 2000);
                 });
             }
@@ -691,23 +772,24 @@
         async function generateImage() {
             const projectId = projectIdInput.value.trim();
             const apiKey = apiKeyInput.value.trim();
-            const positivePrompt = buildPositivePrompt();
-            const negativePrompt = getNegativePromptString();
+            const state = buildState();
+            const positivePrompt = buildPositivePrompt(state);
+            const negativePrompt = getNegativePromptString(state);
 
             if (!projectId || !apiKey) {
-                showError("API 키와 Project ID를 상단 설정에 입력해주세요.");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showError("상단의 API 설정 영역에서 Project ID와 API Key (Bearer 토큰)를 입력해주세요.");
                 return;
             }
 
             // Set Loading UI
             submitBtn.disabled = true;
             submitBtn.dataset.loading = 'true';
-            submitBtn.textContent = "생성 중...";
+            submitBtn.innerHTML = '<span style="font-size:0.9em">⏳</span> 생성 중... (10~20초 소요)';
             resultPlaceholder.classList.add('hidden');
             resultImage.style.display = 'none';
             resultActions.style.display = 'none';
             errorBox.style.display = 'none';
+            resultContainer.classList.remove('has-image');
             loadingSpinner.style.display = 'block';
 
             const endpoint = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
@@ -741,10 +823,14 @@
                     const errorData = await response.json().catch(() => ({}));
                     console.error("API Error details:", errorData);
                     
-                    if (response.status === 400) throw new Error("프롬프트를 확인해주세요. 잘못된 요청입니다.");
-                    if (response.status === 401) throw new Error("API 키를 확인해주세요. 인증에 실패했습니다.");
-                    if (response.status === 429) throw new Error("잠시 후 다시 시도해주세요. 요청 한도를 초과했습니다.");
-                    throw new Error(`API 오류가 발생했습니다 (${response.status})`);
+                    if (response.status === 400) throw new Error("프롬프트를 확인해주세요. (Bad Request)");
+                    if (response.status === 401) throw new Error("인증 실패. API Key(gcloud auth print-access-token)가 유효한지 확인해주세요.");
+                    if (response.status === 403) throw new Error("권한 오류. 해당 Project에 Vertex AI API가 활성화되어 있는지 확인하세요.");
+                    if (response.status === 429) throw new Error("요청 한도를 초과했습니다. 잠시 후 시도해주세요.");
+                    
+                    // 상세 에러가 있는 경우 추가
+                    let detailMsg = errorData.error?.message ? ` - ${errorData.error.message}` : "";
+                    throw new Error(`API 오류가 발생했습니다 (${response.status})${detailMsg}`);
                 }
 
                 const data = await response.json();
@@ -758,33 +844,42 @@
                     downloadBtn.href = dataUrl;
                     
                     loadingSpinner.style.display = 'none';
+                    resultContainer.classList.add('has-image');
                     resultImage.style.display = 'block';
                     resultActions.style.display = 'flex';
+                    
+                    errorBox.style.display = 'none';
                 } else {
                     throw new Error("응답에서 이미지 데이터를 찾을 수 없습니다.");
                 }
 
             } catch (error) {
                 console.error("Generation failed:", error);
-                showError(error.message || "네트워크 오류가 발생했습니다.");
+                
+                // 브라우저 CORS 문제 / 인터넷 문제 분기
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    showError("네트워크 오류 발생. (Vertex AI를 브라우저에서 직접 호출 시 CORS(교차 출처 리소스 공유) 정책에 의해 차단되었거나, 인터넷 연결이 불안정할 수 있습니다.)");
+                } else {
+                    showError(error.message || "알 수 없는 오류가 발생했습니다.");
+                }
+                
                 loadingSpinner.style.display = 'none';
                 resultPlaceholder.classList.remove('hidden');
             } finally {
                 // Reset Loading UI
                 submitBtn.dataset.loading = 'false';
-                submitBtn.textContent = "이미지 생성하기";
-                updatePrompts(); // 재평가하여 disable 상태 원복
+                submitBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> 이미지 생성하기';
+                updatePrompts(); // 재평가
             }
         }
 
         function showError(msg) {
-            errorBox.textContent = msg;
+            errorBox.textContent = `❌ ${msg}`;
             errorBox.style.display = 'block';
         }
 
         submitBtn.addEventListener('click', generateImage);
         retryBtn.addEventListener('click', generateImage);
-
     </script>
 </body>
 </html>
