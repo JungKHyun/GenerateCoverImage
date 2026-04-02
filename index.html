@@ -386,7 +386,10 @@
                         <option value="agricultural environment">Agriculture (농업)</option>
                         <option value="energy and power plant environment">Energy (에너지)</option>
                         <option value="telecommunications network center">Telecommunications (통신)</option>
+                        <option value="fashion and apparel environment">Fashion (패션/의류)</option>
+                        <option value="other">기타 (직접 입력)</option>
                     </select>
+                    <input type="text" id="industryOther" class="prompt-input" placeholder="추가할 산업군을 영어로 입력..." style="display: none; margin-top: 0.5rem;" />
                 </div>
                 <div class="input-group">
                     <label for="brandTone">브랜드 톤</label>
@@ -679,7 +682,7 @@
 
             return {
                 brandText: getVal('brandText').trim(),
-                industry: getVal('industry'),
+                industry: getVal('industry') === 'other' ? getVal('industryOther').trim() : getVal('industry'),
                 brandTone: getVal('brandTone'),
                 mood: getVal('mood'),
                 audienceLevel: getVal('audienceLevel'),
@@ -753,6 +756,19 @@
         [...promptInputs, ...promptInputMulti, brandInput, aspectRatioSelect].forEach(input => {
             input.addEventListener('change', updatePrompts);
             input.addEventListener('input', updatePrompts);
+        });
+
+        // Event listener for Industry 'Other' toggle
+        const industrySelect = document.getElementById('industry');
+        const industryOtherInput = document.getElementById('industryOther');
+        industrySelect.addEventListener('change', (e) => {
+            if (e.target.value === 'other') {
+                industryOtherInput.style.display = 'block';
+                industryOtherInput.focus();
+            } else {
+                industryOtherInput.style.display = 'none';
+                industryOtherInput.value = ''; // clear the hidden input
+            }
         });
 
         // Copy Prompt
