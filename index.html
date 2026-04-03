@@ -390,8 +390,18 @@
             </div>
 
             <!-- AI 모델 선택 -->
+            <div class="category-block">
+                <div class="section-title">AI 모델 선택</div>
                 <div class="input-group">
-                    <label for="aiModel">생성 모델</label>
+                    <label for="textModel">프롬프트 구체화 모델 (Text)</label>
+                    <select id="textModel" class="prompt-input">
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro (고품질)</option>
+                        <option value="gemini-3.0-pro">Gemini 3.0 Pro</option>
+                        <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (빠름/권장)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="aiModel">이미지 생성 모델 (Image)</label>
                     <select id="aiModel" class="prompt-input">
                         <option value="gemini-2.5-flash-image">🍌 Nano Banana (Gemini 2.5 Flash Image)</option>
                         <option value="gemini-3-pro-image-preview">🍌 Nano Banana Pro (Gemini 3 Pro Image)</option>
@@ -399,6 +409,7 @@
                     </select>
                     <span class="help-text">※ Nano Banana는 Google Gemini의 이미지 생성 기능의 공식 코드명입니다.</span>
                 </div>
+            </div>
             <!-- 브랜드 & 기업 -->
             <div class="category-block form-panel">
                 <div class="section-title">B. 브랜드 / 기업명</div>
@@ -655,17 +666,29 @@
             
             <div class="preview-card">
                 <div class="section-title" style="border:none; margin-bottom: 0.5rem;">
-                    조합된 프롬프트 (Prompt)
+                    기본 프롬프트 (Base Prompt)
+                </div>
+                <div class="preview-box" id="promptPreview" style="min-height: 60px;">옵션을 선택하시면 이곳에 영문 기본 프롬프트가 나타납니다.</div>
+                
+                <div style="text-align: center; margin: 1rem 0;">
+                    <button id="enhanceBtn" class="action-btn primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: #4f46e5; border-color: #4f46e5;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" /></svg>
+                        AI로 프롬프트 더 구체화하기 (Text 모델 사용)
+                    </button>
+                </div>
+
+                <div class="section-title" style="border:none; margin-bottom: 0.5rem; font-size: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    최종 프롬프트 (Final Prompt)
                     <button class="copy-btn" id="copyPromptBtn">내용 복사</button>
                 </div>
-                <div class="preview-box" id="promptPreview">옵션을 선택하시면 이곳에 영문 최종 프롬프트가 나타납니다.</div>
+                <textarea class="preview-box" id="finalPromptBox" style="width: 100%; border: 1px solid var(--border-color); outline: none; background-color: #1e293b; color: #f8fafc; resize: vertical; min-height: 100px; font-family: 'Consolas', monospace; font-size: 0.875rem;" placeholder="AI로 구체화하거나 직접 수정한 프롬프트를 바탕으로 이미지가 생성됩니다."></textarea>
                 
                 <div class="section-title" style="border:none; margin-bottom: 0.5rem; font-size: 1rem; margin-top: 1rem;">
                     부정 프롬프트 (Negative Prompt)
                 </div>
                 <div class="preview-box" id="negativePreview" style="min-height: 40px;">없음</div>
                 
-                <button id="submitBtn" class="submit-btn" disabled>
+                <button id="submitBtn" class="submit-btn" disabled style="margin-top: 1.5rem;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     이미지 생성하기
                 </button>
@@ -704,9 +727,17 @@
         const aspectRatioSelect = document.getElementById('aspectRatio');
         
         const promptPreview = document.getElementById('promptPreview');
+        const finalPromptBox = document.getElementById('finalPromptBox');
+        const enhanceBtn = document.getElementById('enhanceBtn');
         const negativePreview = document.getElementById('negativePreview');
         const submitBtn = document.getElementById('submitBtn');
         const copyPromptBtn = document.getElementById('copyPromptBtn');
+
+        let isFinalPromptCustomized = false;
+
+        finalPromptBox.addEventListener('input', () => {
+            isFinalPromptCustomized = true;
+        });
         
         const projectIdInput = document.getElementById('projectId');
         const apiKeyInput = document.getElementById('apiKey');
@@ -790,7 +821,12 @@
                                   state.subject || state.negativeSpace || state.colorPalette || 
                                   state.background || state.quality.length > 0 || state.brandText;
 
-            promptPreview.textContent = hasUserChoice ? positive : "옵션을 선택하시면 이곳에 영문 최종 프롬프트가 나타납니다.";
+            promptPreview.textContent = hasUserChoice ? positive : "옵션을 선택하시면 이곳에 영문 기본 프롬프트가 나타납니다.";
+            
+            if (!isFinalPromptCustomized) {
+                finalPromptBox.value = hasUserChoice ? positive : "";
+            }
+
             negativePreview.textContent = negative || "없음";
 
             // Submit Button 활성 조건: 스타일 또는 주제 중 최소 1개 이상 선택
@@ -834,14 +870,79 @@
 
         // Copy Prompt
         copyPromptBtn.addEventListener('click', () => {
-            const state = buildState();
-            const textToCopy = buildPositivePrompt(state);
+            const textToCopy = finalPromptBox.value.trim();
             if (textToCopy && textToCopy !== "no text, no watermark") {
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     const originalText = copyPromptBtn.textContent;
                     copyPromptBtn.textContent = '✔ 복사 완료!';
                     setTimeout(() => copyPromptBtn.textContent = originalText, 2000);
                 });
+            }
+        });
+
+        // AI Enhance Prompt Logic
+        enhanceBtn.addEventListener('click', async () => {
+            const apiKey = apiKeyInput.value.trim();
+            const basePrompt = promptPreview.textContent;
+
+            if (!apiKey) {
+                showError("상단의 API 설정 영역에서 Google AI Studio API Key(AIzaSy...)를 입력해주세요.");
+                return;
+            }
+            if (basePrompt.includes('옵션을 선택하시면')) {
+                alert("옵션을 먼저 선택해주세요.");
+                return;
+            }
+
+            const originalContent = enhanceBtn.innerHTML;
+            enhanceBtn.disabled = true;
+            enhanceBtn.innerHTML = '<div class="loading-spinner" style="display:inline-block; width:16px; height:16px; border-width:2px; vertical-align:middle; margin-right:5px; border-left-color: white;"></div> 프롬프트 확장 중... (약 2~4초)';
+
+            const textModel = document.getElementById('textModel').value || 'gemini-2.5-flash';
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${textModel}:generateContent`;
+
+            const instruction = "You are an expert AI image generation prompt engineer. Enhance the following base prompt into a highly detailed, descriptive, and visually striking image generation prompt in English. Ensure elements like lighting, ambiance, lens effect, and photographic style are emphasized. DO NOT USE ANY EXPRESSIONS OR MARKDOWNS. Just return the prompt text.\n\nBase Prompt: " + basePrompt;
+
+            const requestBody = {
+                "contents": [{
+                    "parts": [{"text": instruction}]
+                }],
+                "generationConfig": {
+                    "temperature": 0.7
+                }
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'x-goog-api-key': apiKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    let detailMsg = errorData.error?.message ? ` - ${errorData.error.message}` : "";
+                    throw new Error(`구체화 실패 (${response.status})${detailMsg}`);
+                }
+
+                const data = await response.json();
+                const enhancedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (enhancedText) {
+                    finalPromptBox.value = enhancedText.trim();
+                    isFinalPromptCustomized = true;
+                } else {
+                    throw new Error("응답 텍스트를 찾을 수 없습니다.");
+                }
+            } catch (error) {
+                console.error("Enhance failed:", error);
+                alert(error.message);
+            } finally {
+                enhanceBtn.disabled = false;
+                enhanceBtn.innerHTML = originalContent;
             }
         });
 
@@ -866,7 +967,7 @@
         async function generateImage() {
             const apiKey = apiKeyInput.value.trim();
             const state = buildState();
-            const positivePrompt = buildPositivePrompt(state);
+            const positivePrompt = finalPromptBox.value.trim() || buildPositivePrompt(state);
             const negativePrompt = getNegativePromptString(state);
 
             if (!apiKey) {
