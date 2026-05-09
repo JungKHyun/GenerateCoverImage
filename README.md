@@ -1,9 +1,23 @@
-# GenerateCoverImage
+# 강의안 커버 이미지 생성기 (GenerateCoverImage)
 
-This project is a tool for generating cover images.
+웹 브라우저에서 간편하게 사용할 수 있는 강의안(발표 자료) 커버 이미지 생성기입니다. 
 
-## Setup
+## 주요 기능
+- 직관적인 UI 기반의 입력 폼 (왼쪽 사이드바)
+- 실시간 결과 확인 및 인터페이스 (오른쪽 메인 콘텐츠)
+- 깔끔하고 반응형 레이아웃 적용
 
-1. Clone this repository.
-2. Install dependencies.
-3. Run the application.
+## 파일 구조
+- `index.html`: 메인 웹 페이지 (HTML/CSS 포함)
+
+## 사용 방법
+
+복잡한 설치 과정이나 서버 환경 구성 없이 동작하는 정적 웹 페이지입니다.
+
+1. 이 저장소를 클론(Clone)하거나 다운로드합니다.
+2. `index.html` 파일을 웹 브라우저 (Chrome, Edge, Safari 등)에서 엽니다.
+3. 왼쪽 사이드바에서 내용을 설정하고 완성된 커버 이미지를 확인 및 활용합니다.
+
+## 기술 스택
+- HTML5
+- CSS3 (반응형 웹, Flexbox 기반 레이아웃)

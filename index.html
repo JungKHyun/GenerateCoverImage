@@ -670,7 +670,12 @@
                 </div>
                 <div class="preview-box" id="promptPreview" style="min-height: 60px;">옵션을 선택하시면 이곳에 영문 기본 프롬프트가 나타납니다.</div>
                 
-                <div style="text-align: center; margin: 1rem 0;">
+                <div style="margin: 1rem 0 0.5rem 0;">
+                    <label for="additionalDesc" style="font-weight: 600; font-size: 0.875rem; color: var(--text-main); display: block; margin-bottom: 0.375rem;">추가 설명 (Additional Description)</label>
+                    <textarea id="additionalDesc" rows="3" style="width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--border-color); border-radius: 0.375rem; font-size: 0.9rem; background-color: #fff; color: var(--text-main); resize: vertical; font-family: inherit; transition: border-color 0.2s;" placeholder="AI 구체화 시 추가로 반영하고 싶은 내용을 자유롭게 입력하세요. (예: 파란색 계열로, 사람은 넣지 말고, 미래적인 느낌으로)"></textarea>
+                </div>
+
+                <div style="text-align: center; margin: 0.5rem 0;">
                     <button id="enhanceBtn" class="action-btn primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: #4f46e5; border-color: #4f46e5;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" /></svg>
                         AI로 프롬프트 더 구체화하기 (Text 모델 사용)
@@ -737,6 +742,7 @@
 
         finalPromptBox.addEventListener('input', () => {
             isFinalPromptCustomized = true;
+            updatePrompts();
         });
         
         const projectIdInput = document.getElementById('projectId');
@@ -829,8 +835,9 @@
 
             negativePreview.textContent = negative || "없음";
 
-            // Submit Button 활성 조건: 스타일 또는 주제 중 최소 1개 이상 선택
-            if (state.style || state.subject) {
+            // Submit Button 활성 조건: 스타일 또는 주제 선택 OR 최종 프롬프트에 내용이 있는 경우
+            const hasFinalPrompt = finalPromptBox.value.trim().length > 0;
+            if (state.style || state.subject || hasFinalPrompt) {
                 if (submitBtn.dataset.loading !== 'true') {
                     submitBtn.disabled = false;
                 }
@@ -901,7 +908,9 @@
             const textModel = document.getElementById('textModel').value || 'gemini-2.5-flash';
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${textModel}:generateContent`;
 
-            const instruction = "You are an expert AI image generation prompt engineer. Enhance the following base prompt into a highly detailed, descriptive, and visually striking image generation prompt in English. Ensure elements like lighting, ambiance, lens effect, and photographic style are emphasized. DO NOT USE ANY EXPRESSIONS OR MARKDOWNS. Just return the prompt text.\n\nBase Prompt: " + basePrompt;
+            const additionalDesc = document.getElementById('additionalDesc').value.trim();
+            const additionalPart = additionalDesc ? `\n\nAdditional requirements from the user (incorporate these into the prompt): ${additionalDesc}` : '';
+            const instruction = "You are an expert AI image generation prompt engineer. Enhance the following base prompt into a highly detailed, descriptive, and visually striking image generation prompt in English. Ensure elements like lighting, ambiance, lens effect, and photographic style are emphasized. DO NOT USE ANY EXPRESSIONS OR MARKDOWNS. Just return the prompt text.\n\nBase Prompt: " + basePrompt + additionalPart;
 
             const requestBody = {
                 "contents": [{
@@ -934,6 +943,7 @@
                 if (enhancedText) {
                     finalPromptBox.value = enhancedText.trim();
                     isFinalPromptCustomized = true;
+                    updatePrompts();
                 } else {
                     throw new Error("응답 텍스트를 찾을 수 없습니다.");
                 }
