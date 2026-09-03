@@ -361,6 +361,25 @@
         .hidden {
             display: none !important;
         }
+
+        .model-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .model-refresh-btn {
+            border: 0;
+            background: transparent;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0;
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body>
@@ -395,8 +414,6 @@
                 <div class="input-group">
                     <label for="textModel">프롬프트 구체화 모델 (Text)</label>
                     <select id="textModel" class="prompt-input">
-                        <option value="gemini-2.5-pro">Gemini 2.5 Pro (고품질)</option>
-                        <option value="gemini-3.0-pro">Gemini 3.0 Pro</option>
                         <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (빠름/권장)</option>
                     </select>
                 </div>
@@ -404,10 +421,88 @@
                     <label for="aiModel">이미지 생성 모델 (Image)</label>
                     <select id="aiModel" class="prompt-input">
                         <option value="gemini-2.5-flash-image">🍌 Nano Banana (Gemini 2.5 Flash Image)</option>
-                        <option value="gemini-3-pro-image-preview">🍌 Nano Banana Pro (Gemini 3 Pro Image)</option>
-                        <option value="gemini-3.1-flash-image-preview" selected>🍌 Nano Banana 2 (Gemini 3.1 Flash Image) ★권장</option>
+                        <option value="gemini-3-pro-image">🍌 Nano Banana Pro (Gemini 3 Pro Image)</option>
+                        <option value="gemini-3.1-flash-image" selected>🍌 Nano Banana 2 (Gemini 3.1 Flash Image) ★권장</option>
                     </select>
                     <span class="help-text">※ Nano Banana는 Google Gemini의 이미지 생성 기능의 공식 코드명입니다.</span>
+                    <div class="model-status"><span id="modelStatus">API Key 입력 후 사용 가능한 모델을 조회합니다.</span><button type="button" id="refreshModelsBtn" class="model-refresh-btn">모델 새로고침</button></div>
+                </div>
+            </div>
+
+            <div class="category-block form-panel">
+                <div class="section-title">강의 커버 기획</div>
+                <div class="input-group">
+                    <label for="coverPurpose">커버 사용 목적</label>
+                    <select id="coverPurpose" class="prompt-input">
+                        <option value="">선택 안 함</option>
+                        <option value="a polished corporate lecture cover">기업 교육 강의</option>
+                        <option value="an executive briefing cover with a premium editorial feel">임원 보고·브리핑</option>
+                        <option value="a practical workshop cover with an energetic learning mood">실습 워크숍</option>
+                        <option value="a keynote conference cover with a strong focal image">컨퍼런스·키노트</option>
+                        <option value="an internal training program cover that feels approachable and clear">사내 연수</option>
+                        <option value="a public seminar cover designed for broad appeal">공개 세미나</option>
+                        <option value="a course module cover in a consistent education series">교육 과정 모듈</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="visualConcept">핵심 시각 은유</label>
+                    <select id="visualConcept" class="prompt-input">
+                        <option value="">선택 안 함</option>
+                        <option value="a clear visual metaphor for transformation and growth">변화·성장</option>
+                        <option value="a visual metaphor for connected systems and collaboration">연결·협업</option>
+                        <option value="a visual metaphor for insight, discovery, and seeing patterns">통찰·발견</option>
+                        <option value="a visual metaphor for navigating complexity and making decisions">복잡성·의사결정</option>
+                        <option value="a visual metaphor for human-centered technology and responsible AI">사람 중심 기술·AI</option>
+                        <option value="a visual metaphor for building a strong foundation and sustainable practice">기초·지속가능성</option>
+                        <option value="one memorable symbolic object as the sole visual anchor">상징 오브젝트 1개</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="subjectTreatment">인물·대상 처리</label>
+                    <select id="subjectTreatment" class="prompt-input">
+                        <option value="">선택 안 함</option>
+                        <option value="no people, use objects and environments only">인물 없음</option>
+                        <option value="small-scale diverse professionals collaborating, faces not emphasized">협업하는 전문가</option>
+                        <option value="a single person shown from behind or in silhouette, no facial detail">실루엣 1명</option>
+                        <option value="close-up hands interacting with a meaningful object or interface">손·행동 중심</option>
+                        <option value="abstract forms only, with no literal human figures">추상 형태만</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="lightingStyle">조명 연출</label>
+                    <select id="lightingStyle" class="prompt-input">
+                        <option value="">선택 안 함</option>
+                        <option value="soft daylight with clean, optimistic highlights">맑은 자연광</option>
+                        <option value="cinematic key light with subtle rim lighting and controlled shadows">시네마틱 림라이트</option>
+                        <option value="dramatic volumetric light beams through atmospheric space">볼류메트릭 빛</option>
+                        <option value="premium studio lighting with precise product-photography highlights">프리미엄 스튜디오</option>
+                        <option value="high-key lighting with a bright, open, reassuring mood">하이키</option>
+                        <option value="low-key lighting with restrained contrast and a serious mood">로우키</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="cameraStyle">카메라·시점</label>
+                    <select id="cameraStyle" class="prompt-input">
+                        <option value="">선택 안 함</option>
+                        <option value="wide-angle perspective with generous spatial depth">와이드 앵글</option>
+                        <option value="natural 35mm editorial photography perspective">35mm 에디토리얼</option>
+                        <option value="top-down flat lay composition with organized visual rhythm">탑뷰 플랫레이</option>
+                        <option value="isometric three-quarter view with crisp geometry">아이소메트릭</option>
+                        <option value="macro close-up with tactile detail and shallow depth of field">매크로 디테일</option>
+                        <option value="architectural perspective with balanced vertical lines">건축적 원근</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="materialStyle">재질·표면감</label>
+                    <select id="materialStyle" class="prompt-input">
+                        <option value="">선택 안 함</option>
+                        <option value="translucent glass and polished metal with refined reflections">유리·메탈</option>
+                        <option value="matte paper, ink, and tactile editorial print textures">종이·인쇄 질감</option>
+                        <option value="soft fabric and warm natural materials">패브릭·자연 소재</option>
+                        <option value="holographic light, translucent interfaces, and futuristic surfaces">홀로그램·미래 표면</option>
+                        <option value="architectural concrete, stone, and structured surfaces">콘크리트·석재</option>
+                        <option value="clean 3D clay-like material with soft edges">클레이 3D</option>
+                    </select>
                 </div>
             </div>
             <!-- 브랜드 & 기업 -->
@@ -589,6 +684,15 @@
                     </select>
                 </div>
                 <div class="input-group">
+                    <label for="imageSize">생성 해상도</label>
+                    <select id="imageSize" class="prompt-input">
+                        <option value="1K" selected>1K (빠른 시안)</option>
+                        <option value="2K">2K (강의 표지 권장)</option>
+                        <option value="4K">4K (고해상도 출력)</option>
+                    </select>
+                    <span class="help-text">※ 모델에 따라 지원 해상도가 다를 수 있습니다.</span>
+                </div>
+                <div class="input-group">
                     <label for="colorPalette">색상 팔레트</label>
                     <select id="colorPalette" class="prompt-input">
                         <option value="">선택 안함</option>
@@ -757,6 +861,8 @@
         const downloadBtn = document.getElementById('downloadBtn');
         const copyImageBtn = document.getElementById('copyImageBtn');
         const retryBtn = document.getElementById('retryBtn');
+        const modelStatus = document.getElementById('modelStatus');
+        const refreshModelsBtn = document.getElementById('refreshModelsBtn');
 
         // State builder function
         function buildState() {
@@ -770,6 +876,12 @@
 
             return {
                 brandText: getVal('brandText').trim(),
+                coverPurpose: getVal('coverPurpose'),
+                visualConcept: getVal('visualConcept'),
+                subjectTreatment: getVal('subjectTreatment'),
+                lightingStyle: getVal('lightingStyle'),
+                cameraStyle: getVal('cameraStyle'),
+                materialStyle: getVal('materialStyle'),
                 industry: getVal('industry') === 'other' ? getVal('industryOther').trim() : getVal('industry'),
                 brandTone: getVal('brandTone') === 'other' ? getVal('brandToneOther').trim() : getVal('brandTone'),
                 mood: getVal('mood') === 'other' ? getVal('moodOther').trim() : getVal('mood'),
@@ -791,6 +903,8 @@
             const parts = [];
 
             if (state.brandText) parts.push(`for ${state.brandText}`);
+            if (state.coverPurpose) parts.push(state.coverPurpose);
+            if (state.visualConcept) parts.push(state.visualConcept);
             if (state.industry) parts.push(state.industry);
             if (state.brandTone) parts.push(state.brandTone);
             if (state.mood) parts.push(state.mood);
@@ -798,9 +912,13 @@
             if (state.audienceContext) parts.push(state.audienceContext);
             if (state.style) parts.push(state.style);
             if (state.subject) parts.push(`of ${state.subject}`);
+            if (state.subjectTreatment) parts.push(state.subjectTreatment);
             if (state.negativeSpace) parts.push(state.negativeSpace);
             if (state.colorPalette) parts.push(state.colorPalette);
             if (state.background) parts.push(state.background);
+            if (state.lightingStyle) parts.push(state.lightingStyle);
+            if (state.cameraStyle) parts.push(state.cameraStyle);
+            if (state.materialStyle) parts.push(state.materialStyle);
 
             const qualityItems = [...state.quality];
             qualityItems.push(FIXED_QUALITY);
@@ -822,7 +940,9 @@
             const negative = getNegativePromptString(state);
 
             // "for " 또는 quality 기본값만 있는 경우 (사용자 선택 없음)
-            const hasUserChoice = state.industry || state.brandTone || state.mood || 
+            const hasUserChoice = state.coverPurpose || state.visualConcept || state.subjectTreatment ||
+                                  state.lightingStyle || state.cameraStyle || state.materialStyle ||
+                                  state.industry || state.brandTone || state.mood || 
                                   state.audienceLevel || state.audienceContext || state.style || 
                                   state.subject || state.negativeSpace || state.colorPalette || 
                                   state.background || state.quality.length > 0 || state.brandText;
@@ -837,7 +957,7 @@
 
             // Submit Button 활성 조건: 스타일 또는 주제 선택 OR 최종 프롬프트에 내용이 있는 경우
             const hasFinalPrompt = finalPromptBox.value.trim().length > 0;
-            if (state.style || state.subject || hasFinalPrompt) {
+            if (state.style || state.subject || state.visualConcept || hasFinalPrompt) {
                 if (submitBtn.dataset.loading !== 'true') {
                     submitBtn.disabled = false;
                 }
@@ -857,6 +977,70 @@
             'industry', 'brandTone', 'mood', 'audienceLevel', 'audienceContext', 
             'style', 'subject', 'negativeSpace', 'colorPalette', 'background'
         ];
+
+        // Gemini API 모델 목록 조회: 현재 API Key가 접근 가능한 generateContent 모델만 표시
+        async function loadGeminiModels() {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                modelStatus.textContent = 'API Key 입력 후 사용 가능한 모델을 조회합니다.';
+                return;
+            }
+
+            modelStatus.textContent = '사용 가능한 Gemini 모델을 조회하는 중...';
+            refreshModelsBtn.disabled = true;
+            try {
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000', {
+                    headers: { 'x-goog-api-key': apiKey }
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error?.message || `모델 조회 실패 (${response.status})`);
+                }
+
+                const data = await response.json();
+                const models = (data.models || []).filter(model =>
+                    (model.supportedGenerationMethods || []).includes('generateContent') &&
+                    (model.baseModelId || model.name || '').toLowerCase().includes('gemini')
+                );
+                const imageModels = models.filter(model => /image/i.test(model.baseModelId || model.name || ''));
+                const textModels = models.filter(model => !/image|embedding|aqa|tts|robotics/i.test(model.baseModelId || model.name || ''));
+
+                const fillSelect = (select, items, fallbackPattern, emptyText) => {
+                    const oldValue = select.value;
+                    select.replaceChildren();
+                    items.sort((a, b) => (a.displayName || a.baseModelId || a.name).localeCompare(b.displayName || b.baseModelId || b.name));
+                    items.forEach(model => {
+                        const modelId = model.baseModelId || (model.name || '').replace(/^models\//, '');
+                        const option = document.createElement('option');
+                        option.value = modelId;
+                        option.textContent = `${model.displayName || modelId} (${modelId})`;
+                        option.title = model.description || modelId;
+                        select.appendChild(option);
+                    });
+                    if (!items.length) {
+                        const option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = emptyText;
+                        select.appendChild(option);
+                    }
+                    const preferred = items.find(model => fallbackPattern.test(model.baseModelId || model.name || ''));
+                    const preferredId = preferred ? (preferred.baseModelId || preferred.name.replace(/^models\//, '')) : oldValue;
+                    if ([...select.options].some(option => option.value === preferredId)) select.value = preferredId;
+                };
+
+                fillSelect(document.getElementById('textModel'), textModels, /2\.5-flash|3\.1-flash|3\.0-flash/i, '사용 가능한 텍스트 모델이 없습니다.');
+                fillSelect(document.getElementById('aiModel'), imageModels, /3\.1-flash-image|3-pro-image|2\.5-flash-image/i, '사용 가능한 이미지 모델이 없습니다.');
+                modelStatus.textContent = `텍스트 ${textModels.length}개 · 이미지 ${imageModels.length}개 모델을 불러왔습니다.`;
+                updatePrompts();
+            } catch (error) {
+                modelStatus.textContent = `모델 조회 실패: ${error.message}`;
+            } finally {
+                refreshModelsBtn.disabled = false;
+            }
+        }
+
+        apiKeyInput.addEventListener('change', loadGeminiModels);
+        refreshModelsBtn.addEventListener('click', loadGeminiModels);
 
         otherFields.forEach(field => {
             const selectEl = document.getElementById(field);
@@ -996,7 +1180,7 @@
             resultContainer.classList.remove('has-image');
             loadingSpinner.style.display = 'block';
 
-            const aiModel = document.getElementById('aiModel').value || 'gemini-3.1-flash-image-preview';
+            const aiModel = document.getElementById('aiModel').value || 'gemini-3.1-flash-image';
             // All current models are Gemini-based via generateContent
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${aiModel}:generateContent`;
 
@@ -1006,7 +1190,16 @@
             const requestBody = {
                 "contents": [{
                     "parts": [{"text": promptText}]
-                }]
+                }],
+                "generationConfig": {
+                    "responseModalities": ["IMAGE"],
+                    "responseFormat": {
+                        "image": {
+                            "aspectRatio": state.aspectRatio,
+                            "imageSize": document.getElementById('imageSize').value
+                        }
+                    }
+                }
             };
 
             try {
